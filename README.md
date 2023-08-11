@@ -1,6 +1,7 @@
 # BloomQuote
 Quote management app for a florist
 
+## Introduction
 The BloomQuote application, is a web-based platform. This software aims to streamline the process of creating custom quote proposals and managing events for florists. BloomQuote provides users with a comprehensive platform where they can efficiently capture and organize the details of a customers wedding quotation. BloomQuote will not handle payments or facilitate communication between buyers and sellers. Instead, it serves as a detailed reference for a florist to track issued quotes and manage updates to quotations.
 
 # Definitions, Acronyms, and Abbreviations

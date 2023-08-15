@@ -124,7 +124,7 @@ $eventDetails = fetchEvent($pdo, $EventID);
 //   int(28)
 //   ["EventDate"]=>
 //   string(10) "2025-05-05"
-//   ["ConsultationType"]=>
+//   ["EventType"]=>
 //   string(7) "Wedding"
 //   ["IsBooked"]=>
 //   int(0)
@@ -148,7 +148,7 @@ $eventDetails = fetchEvent($pdo, $EventID);
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><?= $eventDetails['ConsultationType'] ?> <?= $eventDetails['EventDate'] ?> Quotes</h1>
+                        <h1 class="mt-4"><?= $eventDetails['EventType'] ?> <?= $eventDetails['EventDate'] ?> Quotes</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href='index.php'>Customers</a></li>
                             <li class="breadcrumb-item"><a href='events.php?CustomerID=<?= $CustomerID ?>'>Events</a></li>
@@ -166,8 +166,6 @@ $eventDetails = fetchEvent($pdo, $EventID);
                                     <thead>
 										<tr>
 											<th>Detail</th>
-											<th>Quote ID</th>
-											<th>Event ID</th>
 											<th>Introduction Text</th>
 											<th>Deposit Paid</th>
 											<th>Deposit Due Date</th>
@@ -180,8 +178,6 @@ $eventDetails = fetchEvent($pdo, $EventID);
                                     <tfoot>
                                         <tr>
 											<th>Detail</th>
-											<th>Quote ID</th>
-											<th>Event ID</th>
 											<th>Introduction Text</th>
 											<th>Deposit Paid</th>
 											<th>Deposit Due Date</th>
@@ -211,8 +207,6 @@ $eventDetails = fetchEvent($pdo, $EventID);
 												. "&action=View" ?>'
 												 style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">Go To Detail <?=$QuoteARG?></a>
 										</td>
-										 <td>  <?= $QuoteARG ?> </td>
-										 <td>  <?= $EventARG ?> </td>
 										 <td>  <?= $IntroARG ?> </td>
 										 <td>  <?= $DeposARG ?> </td>
 										 <td>  <?= $DueDaARG ?> </td>

@@ -69,7 +69,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	if (isset($_GET['id'])) {
 		// Delete customer
-		deleteCustomer($pdo, $_GET['id']);
+		
+		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+		deleteCustomer($pdo, $id);
+		//deleteCustomer($pdo, $_GET['id']);
 		header('Location: ' . strtok($_SERVER["REQUEST_URI"],'?'));
 		exit();
 	}
@@ -78,117 +81,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'include/head.php';
 include 'include/navbar.php';
 include 'include/sidenav.php';
+$eventDetails = getNextEvent($pdo);
 ?>
 
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">
-							<?php 
-								if (isset($_GET['view']) && $_GET['view'] === 'archived') {
-									echo "Viewing Archived Customers";
-								} else {
-									echo "Viewing Active Customers";
-								}
-							?></h1>
+                        <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Customers</li>
+                            <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
-						
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-									<?php 
-										if (isset($_GET['view']) && $_GET['view'] === 'archived') {
-											echo "Archived Customers";
-										} else {
-											echo "Active Customers";
-										}
-									?>
-								</br>
-								<a href="?view=active">Show Active Customers</a> | <a href="?view=archived">Show Archived Customers</a>
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body">Warning Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-										<tr>
-											<th>View Customer Events</th>
-											<th>CustomerID</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>PhoneNumber</th>
-											<th>Email</th>
-											<th>DeliveryAddress</th>
-											<th>IsArchived</th>
-											<th>Delete Customer</th>
-											<th>Edit Customer Details</th>
-										</tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-											<th>View Customer Events</th>
-											<th>CustomerID</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>PhoneNumber</th>
-											<th>Email</th>
-											<th>DeliveryAddress</th>
-											<th>IsArchived</th>
-											<th>Delete Customer</th>
-											<th>Edit Customer Details</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-										<?php foreach ($rows as $row): ?>
-										<tr>
-											<td>
-											<a href="events.php?CustomerID=<?= $row['CustomerID'] ?>" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Events <?= $row['CustomerID'] ?></a>
-											</td>
-											<td><?= $row['CustomerID'] ?></td>
-											<td><?= $row['FirstName'] ?></td>
-											<td><?= $row['LastName'] ?></td>
-											<td><?= $row['PhoneNumber'] ?></td>
-											<td><?= $row['Email'] ?></td>
-											<td><?= $row['DeliveryAddress'] ?></td>
-											<td><?= $row['IsArchived'] ?></td>
-											
-											<td>
-												<a href="?id=<?= $row['CustomerID'] ?>" onclick="return confirm('Are you sure you want to delete this customer and all associated information?')">Delete</a>
-											</td>
-											
-											<td>
-												<a href="?edit=<?= $row['CustomerID'] ?>">Edit</a>
-											</td>
-										</tr>
-										<?php endforeach; ?>
-                                    </tbody>
-                                </table>
-								
-								<!-- Form to add new customer -->
-								<form action="" method="post">
-									<input type="hidden" name="csrf" value="<?= $csrf ?>">
-									<!-- <input type="hidden" name="CustomerID" value="<?= isset($customer) ? $customer['CustomerID'] : '' ?>"> -->
-									<input type="hidden" name="CustomerID" value="<?= isset($_GET['edit']) ? $_GET['edit'] : '' ?>">
-
-									<input type="hidden" name="action" value="add_customer">
-									<label for="fname">First Name:</label><br>
-									<input type="text" id="fname" name="fname" value="<?= isset($customer) ? $customer['FirstName'] : '' ?>"><br>
-									<label for="lname">Last Name:</label><br>
-									<input type="text" id="lname" name="lname" value="<?= isset($customer) ? $customer['LastName'] : '' ?>"><br>
-									<label for="phone">Phone Number:</label><br>
-									<input type="text" id="phone" name="phone" value="<?= isset($customer) ? $customer['PhoneNumber'] : '' ?>"><br>
-									<label for="email">Email:</label><br>
-									<input type="text" id="email" name="email" value="<?= isset($customer) ? $customer['Email'] : '' ?>"><br>
-									<label for="address">Delivery Address:</label><br>
-									<input type="text" id="address" name="address" value="<?= isset($customer) ? $customer['DeliveryAddress'] : '' ?>"><br>
-									<label for="IsArchived">Archive Customer:</label><br>
-									<input type="checkbox" id="IsArchived" name="IsArchived" value="<?= isset($customer) ? $customer['IsArchived'] : '' ?>"><br>
-									<input type="submit" value="Add Customer">
-									<input type="submit" name="update" value="Update Customer">
-								</form>
-
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-body">Next Event: </br><?= $eventDetails['FirstName'] . " " . $eventDetails['LastName']." </br> On: ".$eventDetails['EventDate']." </br>for event: ".$eventDetails['EventType'] ?></div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="<?php
+						if ($eventDetails) {
+							echo "quotes.php?CustomerID=".$eventDetails['CustomerID']."&EventID=".$eventDetails['EventID']."&action=view";
+						} else {
+							echo "No upcoming events found.";
+						}
+						?>">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">Danger Card</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+							
+							<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+							
                         </div>
+						
                     </div>
                 </main>
 <?php include 'include/footer.php'; ?>

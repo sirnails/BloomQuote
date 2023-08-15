@@ -4,12 +4,7 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-
-$host = "fdb1028.awardspace.net";
-$db   = "4349249_sirnails";
-$user = "4349249_sirnails";
-$pass = "uQwi9Te,8_m{ub.Z";
-$charset = 'utf8mb4';
+include 'credentials.php';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $opt = [
@@ -43,6 +38,7 @@ function formatUKAddress($address) {
 
 
 
+
 /* CRUD */
 // Create: This operation is used to insert or add new records to the database.
 // Read: This operation is used to retrieve or fetch data from the database.
@@ -58,17 +54,18 @@ function formatUKAddress($address) {
 // Fetch Customer from CustomerID            function fetchCustomerDetails(PDO $pdo, $customerID) {
 
 /* Customer Event Functions: */
-// Add new Event for CustomerID              function addNewEvent(PDO $pdo, $customerID, $eventDate, $consultationType, $isBooked) {
+// List all events for all customers         function fetchAllEvents(PDO $pdo) {
+// Add new Event for CustomerID              function addNewEvent(PDO $pdo, $customerID, $EventDate, $EventType, $isBooked) {
 // Fetch List of Events from CustomerID      function fetchEventsForCustomer(PDO $pdo, $customerID) {
-// Fetch event by EventID                    function fetchEvent(PDO $pdo, $eventID) {
-// Update event by EventID                   function updateEvent(PDO $pdo, $eventID, $eventData) {
-// Delete Event by EventID                   function deleteEventWithQuotes(PDO $pdo, $eventID): bool {
+// Fetch Event by EventID                    function fetchEvent(PDO $pdo, $EventID) {
+// Update Event by EventID                   function updateEvent(PDO $pdo, $EventID, $EventData) {
+// Delete Event by EventID                   function deleteEventWithQuotes(PDO $pdo, $EventID): bool {
 
 /* Quote Functions: */
-// Fetch List of QuoteIDs from EventID       function fetchQuoteIDs(PDO $pdo, $eventID) {
+// Fetch List of QuoteIDs from EventID       function fetchQuoteIDs(PDO $pdo, $EventID) {
 // Fetch Quote from a QuoteID                function fetchQuote(PDO $pdo, $quoteID) {
 // Fetch Quote lines for a QuoteID           function fetchQuoteLines(PDO $pdo, $quoteID) {
-// Add new Quote for EventID                 function addQuote(PDO $pdo, $eventID, $quoteData) {
+// Add new Quote for EventID                 function addQuote(PDO $pdo, $EventID, $quoteData) {
 // Update Quote for a QuoteID                function updateQuote(PDO $pdo, $quoteID, $quoteData): bool {
 // Delete Quote for a QuoteID                function deleteQuote(PDO $pdo, $quoteID) {
 
@@ -372,37 +369,131 @@ function fetchCustomerDetails(PDO $pdo, $customerID) {
 
 
 
-/* EVENT FUNCTIONS 
+/* Event FUNCTIONS 
 
 
-This is my MySQL table for the events database:
+This is my MySQL table for the Events database:
 CREATE TABLE Events (
     EventID INT AUTO_INCREMENT,
     CustomerID INT,
     EventDate DATE,
-    ConsultationType VARCHAR(255),
+    EventType VARCHAR(255),
     IsBooked BOOLEAN,
     PRIMARY KEY (EventID),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
 );
 
- $eventData = array(
+ $EventData = array(
     "CustomerID" => "1",
     "EventDate" => "2020-12-31",
-    "ConsultationType" => "Wedding",
+    "EventType" => "Wedding",
     "IsBooked" => false
 ); 
 
 */
 
-function addNewEvent(PDO $pdo, $customerID, $eventDate, $consultationType, $isBooked) {
-    $sql = 'INSERT INTO Events (CustomerID, EventDate, ConsultationType, IsBooked) VALUES (?, ?, ?, ?)';
+
+function fetchAllEvents(PDO $pdo) {
+    // Prepare a SQL query to join the four tables and select the relevant columns
+/*     $sql = "
+	    SELECT 
+	        Customers.FirstName, 
+	        Customers.LastName, 
+	        Customers.Email, 
+	        Events.EventDate, 
+	        Events.EventType, 
+	        Events.IsBooked, 
+	        Quotes.IntroductionText, 
+	        Quotes.DepositPaid, 
+	        Quotes.DepositDueDate, 
+	        Quotes.FinalPaymentDueDate, 
+	        Quotes.Notes 
+	    FROM 
+		    Customers 
+	    INNER JOIN Events ON 
+			Customers.CustomerID = Events.CustomerID 
+	    INNER JOIN Quotes ON
+    		Events.EventID = Quotes.EventID 
+	    INNER JOIN QuoteItems ON 
+		    Quotes.QuoteID = QuoteItems.QuoteID 
+	    ORDER BY Events.EventDate"; */
+		
+		// Just one event
+/*         $sql = "
+		SELECT 
+		    Customers.FirstName, 
+			Customers.LastName, 
+			Customers.Email, 
+			Events.EventDate, 
+			Events.EventType, 
+			Events.IsBooked, 
+			Quotes.IntroductionText, 
+			Quotes.DepositPaid, 
+			Quotes.DepositDueDate, 
+			Quotes.FinalPaymentDueDate, 
+			Quotes.Notes 
+		FROM 
+			Customers 
+		INNER JOIN Events ON 
+			Customers.CustomerID = Events.CustomerID 
+		INNER JOIN Quotes ON 
+			Events.EventID = Quotes.EventID 
+		LEFT JOIN (
+			SELECT 
+			QuoteID, 
+			SUM(Cost) AS TotalCost 
+		FROM 
+			QuoteItems 
+		GROUP BY 
+			QuoteID) AS QuoteItems ON 
+			Quotes.QuoteID = QuoteItems.QuoteID 
+		ORDER BY 
+			Events.EventDate"; */
+			
+			$sql = "SELECT Customers.CustomerID, Events.EventID, Customers.FirstName, Customers.LastName, Customers.Email, Events.EventDate, Events.EventType, Events.IsBooked, Quotes.IntroductionText, Quotes.DepositPaid, Quotes.DepositDueDate, Quotes.FinalPaymentDueDate, Quotes.Notes FROM Customers INNER JOIN Events ON Customers.CustomerID = Events.CustomerID INNER JOIN Quotes ON Events.EventID = Quotes.EventID LEFT JOIN (SELECT QuoteID, SUM(Cost) AS TotalCost FROM QuoteItems GROUP BY QuoteID) AS QuoteItems ON Quotes.QuoteID = QuoteItems.QuoteID ORDER BY Customers.LastName, Events.EventDate";
+
+			
+    // Use a try-catch block to handle any errors
+    try {
+        // Start a transaction
+        $pdo->beginTransaction();
+
+        // Execute the query and fetch the results as an associative array
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        // Check for any errors
+        if ($stmt->errorInfo()[0] != "00000") {
+            var_dump($stmt->errorInfo());
+            $pdo->rollback();
+            return null;
+        }
+
+        // Commit the transaction
+        $pdo->commit();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Return the results
+        return $results;
+
+    } catch(PDOException $e) {
+        // Rollback the transaction and print the error message
+        $pdo->rollback();
+        print "Error!: " . $e->getMessage() . "</br>";
+        return null;
+    }
+}
+
+ 
+
+function addNewEvent(PDO $pdo, $customerID, $EventDate, $EventType, $isBooked) {
+    $sql = 'INSERT INTO Events (CustomerID, EventDate, EventType, IsBooked) VALUES (?, ?, ?, ?)';
     
     try {
         $pdo->beginTransaction();
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$customerID, $eventDate, $consultationType, $isBooked]);
+        $stmt->execute([$customerID, $EventDate, $EventType, $isBooked]);
 
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());
@@ -445,15 +536,15 @@ function fetchEventsForCustomer(PDO $pdo, $customerID) {
     }
 }
 
-function fetchEvent(PDO $pdo, $eventID) {
+function fetchEvent(PDO $pdo, $EventID) {
     try {
-        // Prepare SQL statement to fetch event details and associated customer details
+        // Prepare SQL statement to fetch Event details and associated customer details
         $sql = "
             SELECT 
                 e.EventID, 
                 e.CustomerID, 
                 e.EventDate, 
-                e.ConsultationType, 
+                e.EventType, 
                 e.IsBooked,
                 c.FirstName,
                 c.LastName,
@@ -465,14 +556,14 @@ function fetchEvent(PDO $pdo, $eventID) {
             JOIN 
                 Customers c ON e.CustomerID = c.CustomerID
             WHERE 
-                e.EventID = :eventID
+                e.EventID = :EventID
         ";
         
         // Prepare the SQL statement
         $stmt = $pdo->prepare($sql);
         
-        // Bind the eventID parameter
-        $stmt->bindParam(':eventID', $eventID, PDO::PARAM_INT);
+        // Bind the EventID parameter
+        $stmt->bindParam(':EventID', $EventID, PDO::PARAM_INT);
         
         // Execute the SQL statement
         $stmt->execute();
@@ -488,20 +579,19 @@ function fetchEvent(PDO $pdo, $eventID) {
     }
 }
 
-
-function updateEvent(PDO $pdo, $eventID, $eventData): bool {
+function updateEvent(PDO $pdo, $EventID, $EventData): bool {
     try {
         $pdo->beginTransaction();
 
         $query = "UPDATE Events SET ";
         $params = array();
-        foreach ($eventData as $field => $value) {
+        foreach ($EventData as $field => $value) {
             $query .= "`".str_replace("`", "``", $field)."` = :".$field.", ";
             $params[$field] = $value;
         }
         $query = substr($query, 0, -2); // remove last comma
-        $query .= " WHERE EventID = :eventID";
-        $params['eventID'] = $eventID;
+        $query .= " WHERE EventID = :EventID";
+        $params['EventID'] = $EventID;
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
@@ -522,14 +612,14 @@ function updateEvent(PDO $pdo, $eventID, $eventData): bool {
     }
 }
 
-function deleteEventWithQuotes(PDO $pdo, $eventID): bool {
+function deleteEventWithQuotes(PDO $pdo, $EventID): bool {
     try {
         // Begin the transaction
         $pdo->beginTransaction();
 
-        // Prepare and execute the statement to delete quotes associated with the event
+        // Prepare and execute the statement to delete quotes associated with the Event
         $stmt = $pdo->prepare('DELETE FROM QuoteItems WHERE QuoteID IN (SELECT QuoteID FROM Quotes WHERE EventID = ?)');
-        $stmt->execute([$eventID]);
+        $stmt->execute([$EventID]);
 
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());
@@ -537,9 +627,9 @@ function deleteEventWithQuotes(PDO $pdo, $eventID): bool {
             exit();
         }
 
-        // Prepare and execute the statement to delete quotes for the event
+        // Prepare and execute the statement to delete quotes for the Event
         $stmt = $pdo->prepare('DELETE FROM Quotes WHERE EventID = ?');
-        $stmt->execute([$eventID]);
+        $stmt->execute([$EventID]);
 
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());
@@ -547,9 +637,9 @@ function deleteEventWithQuotes(PDO $pdo, $eventID): bool {
             exit();
         }
 
-        // Prepare and execute the statement to delete the event
+        // Prepare and execute the statement to delete the Event
         $stmt = $pdo->prepare('DELETE FROM Events WHERE EventID = ?');
-        $stmt->execute([$eventID]);
+        $stmt->execute([$EventID]);
 
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());
@@ -568,6 +658,70 @@ function deleteEventWithQuotes(PDO $pdo, $eventID): bool {
         return false;
     }
 }
+
+
+function getNextEvent(PDO $pdo) {
+    try {
+        // Begin the transaction
+        $pdo->beginTransaction();
+
+        // Prepare the SQL statement
+        $stmt = $pdo->prepare("
+            SELECT 
+                E.EventID,
+                C.CustomerID,
+                C.FirstName,
+                C.LastName,
+                E.EventDate,
+                E.EventType
+            FROM 
+                Events AS E
+            JOIN 
+                Customers AS C ON E.CustomerID = C.CustomerID
+            WHERE
+                E.EventDate >= CURDATE()
+            ORDER BY 
+                E.EventDate ASC
+            LIMIT 
+                1
+        ");
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        // Check for any errors
+        if ($stmt->errorInfo()[0] != "00000") {
+            var_dump($stmt->errorInfo());
+            $pdo->rollback();
+            exit();
+        }
+
+        // Fetch the result
+        $nextEvent = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Commit the transaction
+        $pdo->commit();
+
+        if ($nextEvent) {
+            return [
+                "CustomerID" => $nextEvent['CustomerID'],
+                "EventID" => $nextEvent['EventID'],
+                "FirstName" => $nextEvent['FirstName'],
+                "LastName" => $nextEvent['LastName'],
+                "EventDate" => $nextEvent['EventDate'],
+                "EventType" => $nextEvent['EventType']
+            ];
+        } else {
+            return null;
+        }
+    } catch (\PDOException $e) {
+        // Rollback the transaction in case of any errors
+        $pdo->rollback();
+        throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
+}
+
+
 
 
 
@@ -595,11 +749,11 @@ CREATE TABLE Quotes (
 
 */
 
-function fetchQuoteIDs(PDO $pdo, $eventID) {
+function fetchQuoteIDs(PDO $pdo, $EventID) {
     try {
         // Prepare and execute the statement to fetch the QuoteIDs associated with the EventID
         $stmt = $pdo->prepare('SELECT QuoteID FROM Quotes WHERE EventID = ?');
-        $stmt->execute([$eventID]);
+        $stmt->execute([$EventID]);
         
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());
@@ -658,7 +812,7 @@ function fetchQuoteLines(PDO $pdo, $quoteID) {
     }
 }
 
-function addQuote(PDO $pdo, $eventID, $quoteData): int {
+function addQuote(PDO $pdo, $EventID, $quoteData): int {
     try {
 		
         // Start a transaction
@@ -668,7 +822,7 @@ function addQuote(PDO $pdo, $eventID, $quoteData): int {
         $stmt = $pdo->prepare($sql);
         
         // Execute the statement with the quote data
-        $stmt->execute([$eventID, $quoteData['IntroductionText'], $quoteData['DepositPaid'], $quoteData['DepositDueDate'], $quoteData['FinalPaymentDueDate'], $quoteData['Notes']]);
+        $stmt->execute([$EventID, $quoteData['IntroductionText'], $quoteData['DepositPaid'], $quoteData['DepositDueDate'], $quoteData['FinalPaymentDueDate'], $quoteData['Notes']]);
         
         if ($stmt->errorInfo()[0] != "00000") {
             var_dump($stmt->errorInfo());

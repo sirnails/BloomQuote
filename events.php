@@ -16,24 +16,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $CustomerID = $_POST['CustomerID'];
-    $event_date = $_POST['event_date'];
-    $consultation_type = $_POST['consultation_type'];
+    $Event_date = $_POST['Event_date'];
+    $Event_type = $_POST['Event_type'];
 	$is_booked = isset($_POST['is_booked']) ? true : false;
 
-    if ($_POST['action'] == 'add_event') {
-        // Add event
-		addNewEvent($pdo, $CustomerID, $event_date, $consultation_type, $is_booked);
-    } elseif ($_POST['action'] == 'update_event') {
-        // Update event
+    if ($_POST['action'] == 'add_Event') {
+        // Add Event
+		addNewEvent($pdo, $CustomerID, $Event_date, $Event_type, $is_booked);
+    } elseif ($_POST['action'] == 'update_Event') {
+        // Update Event
         $EventID = $_POST['EventID'];
-		$eventData = array(
-			"ConsultationType" => $consultation_type,
+		$EventData = array(
+			"EventType" => $Event_type,
 			"IsBooked" => $is_booked,
-			"EventDate" => $event_date
+			"EventDate" => $Event_date
 		);
-		updateEvent($pdo, $EventID, $eventData);
-    } elseif ($_POST['action'] == 'delete_event') {
-        // Delete event
+		updateEvent($pdo, $EventID, $EventData);
+    } elseif ($_POST['action'] == 'delete_Event') {
+        // Delete Event
         $EventID = $_POST['EventID'];
 		deleteEventWithQuotes($pdo, $EventID);
     }
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if(isset($_GET['CustomerID'])) {
     $CustomerID = $_GET['CustomerID'];
-	$events = fetchEventsForCustomer($pdo, $CustomerID);
+	$Events = fetchEventsForCustomer($pdo, $CustomerID);
 	$customer = fetchCustomerDetails($pdo, $CustomerID);
 }
 	
@@ -63,6 +63,57 @@ include 'include/sidenav.php';
                             <li class="breadcrumb-item active">Events</li>
                         </ol>
 						
+						
+
+<?php if (!isset($CustomerID)) {
+$results = fetchAllEvents($pdo); ?>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+							</div>
+							<div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+										<tr>
+											<th>View Quotes</th>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>EventDate</th>
+											<th>EventType</th>
+											<th>IsBooked</th>
+											<th>Edit Event</th>
+										</tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+											<th>View Quotes</th>
+						<th>Customer Name</th>
+						<th>Event Date</th>
+						<th>Event Type</th>
+											<th>Edit Event</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+										<?php foreach ($results as $Event): ?>
+										<tr>
+											<td>
+												<a href="quotes.php?CustomerID=<?= $Event['CustomerID'] ?>&EventID=<?= $Event['EventID'] ?>&action=view" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Quotes <?= $Event['EventID'] ?></a>
+											</td>
+											<td><?= $Event['FirstName'] ?></td>
+											<td><?= $Event['LastName'] ?></td>
+											<td><?= $Event['EventDate'] ?></td>
+											<td><?= $Event['EventType'] ?></td>
+											<td><?= $Event['IsBooked'] ? 'Yes' : 'No' ?></td>
+											<td>
+												<button onclick="updateForm(<?= $Event['EventID'] ?>, '<?= $Event['EventDate'] ?>', '<?= $Event['EventType'] ?>', <?= $Event['IsBooked'] ?>)">Edit</button>
+											</td>
+										</tr>
+										<?php endforeach; ?>
+                                    </tbody>
+                                </table>
+<?php } else { ?>
+
 
                         <div class="card mb-4">
                             <div class="card-header">
@@ -78,9 +129,8 @@ include 'include/sidenav.php';
                                     <thead>
 										<tr>
 											<th>View Quotes</th>
-											<th>EventID</th>
 											<th>EventDate</th>
-											<th>ConsultationType</th>
+											<th>EventType</th>
 											<th>IsBooked</th>
 											<th>Edit Event</th>
 										</tr>
@@ -88,46 +138,48 @@ include 'include/sidenav.php';
                                     <tfoot>
                                         <tr>
 											<th>View Quotes</th>
-											<th>EventID</th>
 											<th>EventDate</th>
-											<th>ConsultationType</th>
+											<th>EventType</th>
 											<th>IsBooked</th>
 											<th>Edit Event</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-										<?php foreach ($events as $event): ?>
+										<?php foreach ($Events as $Event): ?>
 										<tr>
 											<td>
-												<a href="quotes.php?CustomerID=<?= $CustomerID ?>&EventID=<?= $event['EventID'] ?>&action=view" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Quotes <?= $event['EventID'] ?></a>
+												<a href="quotes.php?CustomerID=<?= $CustomerID ?>&EventID=<?= $Event['EventID'] ?>&action=view" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Quotes <?= $Event['EventID'] ?></a>
 											</td>
-											<td><?= $event['EventID'] ?></td>
-											<td><?= $event['EventDate'] ?></td>
-											<td><?= $event['ConsultationType'] ?></td>
-											<td><?= $event['IsBooked'] ? 'Yes' : 'No' ?></td>
+											<td><?= $Event['EventDate'] ?></td>
+											<td><?= $Event['EventType'] ?></td>
+											<td><?= $Event['IsBooked'] ? 'Yes' : 'No' ?></td>
 											<td>
-												<button onclick="updateForm(<?= $event['EventID'] ?>, '<?= $event['EventDate'] ?>', '<?= $event['ConsultationType'] ?>', <?= $event['IsBooked'] ?>)">Edit</button>
+												<button onclick="updateForm(<?= $Event['EventID'] ?>, '<?= $Event['EventDate'] ?>', '<?= $Event['EventType'] ?>', <?= $Event['IsBooked'] ?>)">Edit</button>
 											</td>
 										</tr>
 										<?php endforeach; ?>
                                     </tbody>
                                 </table>
 								
-								<!-- Form to add/update/delete an event -->
+<?php }
+$customer_id = filter_input(INPUT_GET, 'CustomerID', FILTER_VALIDATE_INT);
+$customer_id_show = ($customer_id) ? $customer_id : '';
+?>
+								<!-- Form to add/update/delete an Event -->
 								<form action="" method="post">
 									<input class="form-control" type="hidden" name="csrf" value="<?= $csrf ?>">
-									<input class="form-control" type="hidden" name="CustomerID" value="<?= $_GET['CustomerID'] ?>">
+									<input class="form-control" type="hidden" name="CustomerID" value="<?= $customer_id_show; ?>">
 									<input class="form-control" type="hidden" name="action" id="action">
 									<input class="form-control" type="hidden" name="EventID" id="EventID">
-									<label for="event_date">Event Date:</label><br>
-									<input class="form-control" type="date" id="event_date" name="event_date"><br>
-									<label for="consultation_type">Consultation Type:</label><br>
-									<input class="form-control" type="text" id="consultation_type" name="consultation_type"><br>
+									<label for="Event_date">Event Date:</label><br>
+									<input class="form-control" type="date" id="Event_date" name="Event_date"><br>
+									<label for="Event_type">Event Type:</label><br>
+									<input class="form-control" type="text" id="Event_type" name="Event_type"><br>
 									<label for="is_booked">Is Booked:</label><br>
 									<input type="checkbox" class="form-check-input" id="is_booked" name="is_booked"><br><br>
-									<input type="submit" value="Add Event" onclick="document.getElementById('action').value='add_event'">
-									<input type="submit" value="Update Event" onclick="document.getElementById('action').value='update_event'">
-									<input type="submit" value="Delete Event" onclick="document.getElementById('action').value='delete_event'">
+									<input type="submit" value="Add Event" onclick="document.getElementById('action').value='add_Event'">
+									<input type="submit" value="Update Event" onclick="document.getElementById('action').value='update_Event'">
+									<input type="submit" value="Delete Event" onclick="document.getElementById('action').value='delete_Event'">
 								</form>
 
                             </div>
@@ -136,10 +188,10 @@ include 'include/sidenav.php';
                 </main>
 				
 <script>
-function updateForm(EventID, event_date, consultation_type, is_booked) {
+function updateForm(EventID, Event_date, Event_type, is_booked) {
     document.getElementById('EventID').value = EventID;
-    document.getElementById('event_date').value = event_date;
-    document.getElementById('consultation_type').value = consultation_type;
+    document.getElementById('Event_date').value = Event_date;
+    document.getElementById('Event_type').value = Event_type;
     document.getElementById('is_booked').checked = is_booked;
 }
 </script>

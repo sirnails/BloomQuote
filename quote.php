@@ -124,6 +124,8 @@ include 'include/sidenav.php';
 <?php if (isset($EventID) && $_GET['action'] == 'View'): ?>
 
 
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
 			<style>
 				.even {
 					background-color: #E0E0E0;

@@ -5,9 +5,11 @@ import EventCard from "../../components/EventCard/EventCard";
 import { Grid } from "@mui/material";
 
 const Dashboard = () => {
-  const { isLoading, error, data } = useQuery("customerData", () =>
-    fetch("http://localhost/customers").then((res) => res.json()),
+  const { data } = useQuery("customerData", () =>
+    fetch("http://localhost:8080/customers").then((res) => res.json()),
   );
+  
+  console.log(data)
 
   return (
     <div>

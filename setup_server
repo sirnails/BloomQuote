@@ -2,14 +2,10 @@ apt update
 apt upgrade
 apt install nodejs npm -y
 
-
-
 cd ui
 npm i
-npm run start &
 
 cd ../api
 npm i
-node server.js &
 
 cd ..

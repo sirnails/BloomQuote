@@ -1,14 +1,33 @@
-// app.js
 const express = require("express");
+var cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 80;
 
-// Sample endpoint
-app.get("/", (req, res) => {
-  res.send("Hello, this is your Express API!");
+app.use(cors());
+
+// Customers endpoint
+app.get("/customers", (req, res) => {
+  res.json({
+    customers: [
+      {
+        name: "Bob",
+        age: 45,
+        address: "123 Fake Street",
+      },
+      {
+        name: "Fred",
+        age: 67,
+        address: "123 Fake Street Two",
+      },
+      {
+        name: "Martin",
+        age: 82,
+        address: "123 Fake Street Three",
+      },
+    ],
+  });
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

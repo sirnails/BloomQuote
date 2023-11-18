@@ -1,0 +1,2 @@
+./api/node server &
+./ui/npm run start &

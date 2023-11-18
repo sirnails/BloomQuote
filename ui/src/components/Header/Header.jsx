@@ -44,7 +44,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       }),
       marginLeft: 0,
     }),
-  })
+  }),
 );
 
 const AppBar = styled(MuiAppBar, {
@@ -75,7 +75,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const PersistentDrawerLeft = (props) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -100,7 +100,7 @@ const PersistentDrawerLeft = (props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            Blossom Quotes
           </Typography>
         </Toolbar>
       </AppBar>

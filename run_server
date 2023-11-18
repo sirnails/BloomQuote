@@ -1,2 +1,4 @@
-./api/node server &
-./ui/npm run start &
+cd ./api
+node server &
+cd ../ui/
+npm run start &

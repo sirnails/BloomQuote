@@ -2,17 +2,19 @@ import { Button, Card, CardActions, CardContent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 export const EventCard = (props) => {
-  const getCurrentDate = () => {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();
+  const getStatusColor = (dateStr) => {
+    const providedDate = new Date(dateStr);
+    const currentDate = new Date();
+    const timeDifference = providedDate - currentDate;
+    const monthsAway = Math.round(timeDifference / (1000 * 60 * 60 * 24 * 30));
 
-    return mm + "-" + dd + "-" + yyyy;
+    if (monthsAway <= 1) return "error.main";
+    else if (monthsAway <= 2) return "warning.main";
+    return "";
   };
 
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ minWidth: 275, bgcolor: getStatusColor(props.eventDate) }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {props.eventType}
@@ -25,7 +27,9 @@ export const EventCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">View Details</Button>
+        <Button size="small" sx={{ color: "text.secondary" }}>
+          View Details
+        </Button>
       </CardActions>
     </Card>
   );

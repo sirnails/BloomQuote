@@ -59,6 +59,15 @@ function App() {
               <Route path="active" element={<ActiveEvents />} />
               <Route path="archived" element={<ArchivedEvents />} />
             </Route>
+
+            <Route
+              path="*"
+              element={
+                <Header>
+                  <h1>404</h1>
+                </Header>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

@@ -5,8 +5,10 @@ import EventCard from "../../components/EventCard/EventCard";
 import { CircularProgress, Grid } from "@mui/material";
 
 const Dashboard = () => {
-  const { data, isSuccess, isLoading } = useQuery("customerData", () =>
-    fetch(`${process.env.REACT_APP_API_URL}/events`).then((res) => res.json()),
+  const { data, isSuccess, isLoading } = useQuery("eventData", () =>
+    fetch(`${process.env.REACT_APP_API_URL}/getActiveEvents`).then((res) =>
+      res.json(),
+    ),
   );
 
   return (

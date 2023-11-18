@@ -6,7 +6,7 @@ import { CircularProgress, Grid } from "@mui/material";
 
 const Dashboard = () => {
   const { data, isSuccess, isLoading } = useQuery("customerData", () =>
-    fetch("http://localhost:80/events").then((res) => res.json()),
+    fetch(`${process.env.REACT_APP_API_URL}/events`).then((res) => res.json()),
   );
 
   return (

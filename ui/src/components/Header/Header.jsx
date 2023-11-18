@@ -25,6 +25,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -129,12 +130,14 @@ const PersistentDrawerLeft = (props) => {
         <Divider />
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Dashboard"} />
-            </ListItemButton>
+            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Dashboard"} />
+              </ListItemButton>
+            </Link>
           </ListItem>
         </List>
         <Divider />
@@ -148,8 +151,12 @@ const PersistentDrawerLeft = (props) => {
                 <ListItemText primary={"Customers"} />
               </AccordionSummary>
               <AccordionDetails>
-                <Button variant="text">Active Customers</Button>
-                <Button variant="text">Archived Customers</Button>
+                <Link to="/customers/active">
+                  <Button variant="text">Active Customers</Button>
+                </Link>
+                <Link to="/customers/archived">
+                  <Button variant="text">Archived Customers</Button>
+                </Link>
               </AccordionDetails>
             </Accordion>
           </ListItem>
@@ -162,8 +169,12 @@ const PersistentDrawerLeft = (props) => {
                 <ListItemText primary={"Events"} />
               </AccordionSummary>
               <AccordionDetails>
-                <Button variant="text">All Events</Button>
-                <Button variant="text">Archived Customers</Button>
+                <Link to="/events/active">
+                  <Button variant="text">All Events</Button>
+                </Link>
+                <Link to="/events/archived">
+                  <Button variant="text">Archived Customers</Button>
+                </Link>
               </AccordionDetails>
             </Accordion>
           </ListItem>

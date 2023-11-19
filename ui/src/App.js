@@ -11,6 +11,8 @@ import ArchivedCustomers from "./pages/Customers/ArchivedCustomers/ArchivedCusto
 import ActiveEvents from "./pages/Events/ActiveEvents/ActiveEvents";
 import ArchivedEvents from "./pages/Events/ArchivedEvents/ArchivedEvents";
 import { Events } from "./pages/Events/Events";
+import Login from "./pages/Login/Login";
+import Logout from "./pages/Logout/Logout";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,10 @@ function App() {
                 </Header>
               }
             />
+
+            <Route path="login" element={<Login />} />
+
+            <Route path="logout" element={<Logout />} />
 
             <Route
               path="customers"

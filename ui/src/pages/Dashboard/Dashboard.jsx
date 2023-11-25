@@ -20,7 +20,7 @@ const Dashboard = () => {
       {isSuccess && (
         <Grid container spacing={2}>
           {data.events.map((customer, i) => (
-            <Grid item xs={4} key={i}>
+            <Grid item xs={12} sm={6} md={4} key={i}>
               <EventCard
                 customerName={customer.customerName}
                 eventDate={customer.eventDate}

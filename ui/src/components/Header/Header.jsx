@@ -76,7 +76,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const PersistentDrawerLeft = (props) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(!(window.innerWidth <= 900));
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -84,6 +84,13 @@ const PersistentDrawerLeft = (props) => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const onMenuItemClick = () => {
+    // Close the menu list after an item has been selected on mobile view
+    // xs = < 600
+    // sm = < 900
+    if (window.innerWidth <= 900) setOpen(false);
   };
 
   return (
@@ -130,7 +137,11 @@ const PersistentDrawerLeft = (props) => {
         <Divider />
         <List>
           <ListItem disablePadding>
-            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <Link
+              to="/"
+              style={{ textDecoration: "none", color: "inherit" }}
+              onClick={onMenuItemClick}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <DashboardIcon />
@@ -151,10 +162,10 @@ const PersistentDrawerLeft = (props) => {
                 <ListItemText primary={"Customers"} />
               </AccordionSummary>
               <AccordionDetails>
-                <Link to="/customers/active">
+                <Link to="/customers/active" onClick={onMenuItemClick}>
                   <Button variant="text">Active Customers</Button>
                 </Link>
-                <Link to="/customers/archived">
+                <Link to="/customers/archived" onClick={onMenuItemClick}>
                   <Button variant="text">Archived Customers</Button>
                 </Link>
               </AccordionDetails>
@@ -169,10 +180,10 @@ const PersistentDrawerLeft = (props) => {
                 <ListItemText primary={"Events"} />
               </AccordionSummary>
               <AccordionDetails>
-                <Link to="/events/active">
+                <Link to="/events/active" onClick={onMenuItemClick}>
                   <Button variant="text">All Events</Button>
                 </Link>
-                <Link to="/events/archived">
+                <Link to="/events/archived" onClick={onMenuItemClick}>
                   <Button variant="text">Archived Customers</Button>
                 </Link>
               </AccordionDetails>

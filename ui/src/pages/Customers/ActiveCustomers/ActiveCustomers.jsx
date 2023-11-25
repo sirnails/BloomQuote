@@ -1,8 +1,9 @@
 import Typography from "@mui/material/Typography";
-import CustomerTable from "../CustomerTable";
+
 import AddCustomerForm from "../AddCustomerForm";
 import { useQuery } from "react-query";
 import { CircularProgress } from "@mui/material";
+import CustomerTable from "../CustomerTable";
 
 export const ActiveCustomers = () => {
   const { data, isSuccess, isLoading } = useQuery("activeCustomerData", () =>

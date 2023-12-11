@@ -1,0 +1,37 @@
+{
+	"correctUsers": {
+		"David": {
+			"email": "david@gmail.com",
+			"password": "password1",
+			"username": "DC125863",
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNmNWRiNmYyOGVkYWUzZjZjN2E5YzEiLCJpYXQiOjE2NTAyODY1MzQsImV4cCI6MTY1MDg5MTMzNH0.Bd7aVbYesfSc5Gd4M9JtjomBB_hnoKE4nDFK3Wub8aY"
+		},
+		"John": {
+			"email": "john@gmail.com",
+			"password": "password2",
+			"username": "JS163801",
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNmNWRlMmYyOGVkYWUzZjZjN2E5ZDgiLCJpYXQiOjE2NTAyODY1MzQsImV4cCI6MTY1MDg5MTMzNH0.Q6BDMV5Otm1fS0-NyraTDQYJqEe5FELOoEr43x1V2PU"
+		},
+		"Fred": {
+			"email": "fred@gmail.com",
+			"password": "password3",
+			"username": "FB848188",
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjNmNWRmNmYyOGVkYWUzZjZjN2E5ZTIiLCJpYXQiOjE2NTAyODY1MzQsImV4cCI6MTY1MDg5MTMzNH0.qk0JWmkRQPLE_8N2UuowNcCG_VM6UNDVmNprkJhfiPI"
+		}
+	},
+	"incorrectUsers": {
+		"James": { "email": "dav42id@gmail.com", "password": "pas2sword152" },
+		"Eric": { "email": "notjohn@gmail.com", "password": "password2" },
+		"Ben": { "email": "fred@gmail.com", "password": "Pass!word3" }
+	},
+	"projects": {
+		"New Project": {
+			"id": "6240bef425bb730417ccc8e1",
+			"tasks": {
+				"Login Bug": "6246f95d4303b758b7873bd6",
+				"Demo Task": "625206853963fd2e615e6797"
+			}
+		},
+		"New Project 2": { "id": "6252b01e33948c54b9b908dc", "tasks": {} }
+	}
+}

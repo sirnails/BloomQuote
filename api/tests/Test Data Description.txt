@@ -1,0 +1,23 @@
+-- Users --
+
+- David Cottrell
+    - New Project (Team Leader)
+    - New Project 2 (Team Leader)
+
+- John Smith
+    - New Project (Developer)
+
+- Fred Brown
+    - New Project (Client)
+    - New Project 2 (Developer)
+
+-- Projects --
+
+- New Project
+    - David Cottrell (Team Leader)
+    - John Smith (Developer)
+
+- New Project 2
+    - David Cottrell (Team Leader)
+    - Fred Brown (Developer)
+    - John Smith (Invited to be a developer)

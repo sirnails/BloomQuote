@@ -11,6 +11,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
+import axios from "axios";
+
 function Copyright(props) {
   return (
     <Typography
@@ -20,23 +22,23 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
+      Your Website
       {new Date().getFullYear()}
       {"."}
     </Typography>
   );
 }
 
-export default function Login() {
+export const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    axios
+      .post("http://localhost:9000/users/login", {
+        email: data.get("email"),
+        password: data.get("password"),
+      })
+      .then((res) => console.log(res));
   };
 
   return (
@@ -81,16 +83,14 @@ export default function Login() {
             label="Remember me"
           />
 
-          <Link to="/">
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-          </Link>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
 
           <Grid container>
             <Grid item xs>
@@ -109,4 +109,6 @@ export default function Login() {
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
-}
+};
+
+export default Login;

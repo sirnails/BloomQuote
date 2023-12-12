@@ -10,6 +10,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
@@ -30,7 +33,15 @@ function Copyright(props) {
 }
 
 export const Login = () => {
+  const [errorNotifcation, setErrorNotifcation] = React.useState({
+    isOpen: false,
+    msg: "",
+  });
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
+    event.preventDefault();
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     axios
@@ -38,11 +49,32 @@ export const Login = () => {
         email: data.get("email"),
         password: data.get("password"),
       })
-      .then((res) => console.log(res));
+      .then((res) => {
+        localStorage.setItem("auth-token", res.data.token);
+        navigate("/");
+      })
+      .catch((err) => {
+        setErrorNotifcation({
+          isOpen: true,
+          msg: err.response.data,
+        });
+      });
   };
 
   return (
     <Container maxWidth="xs">
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={errorNotifcation.isOpen}
+        onClose={() =>
+          setErrorNotifcation({ isOpen: !errorNotifcation.isOpen, msg: "" })
+        }
+        severity="error"
+      >
+        <MuiAlert elevation={6} variant="filled" severity="error">
+          {errorNotifcation.msg}
+        </MuiAlert>
+      </Snackbar>
       <Box
         sx={{
           marginTop: 8,

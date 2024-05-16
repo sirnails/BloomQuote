@@ -220,7 +220,7 @@ include 'include/sidenav.php';
 						<textarea class="form-control" id="textEditor" style="display: none;"></textarea>
 						
 						<!-- Hidden input to store the value for submission -->
-						<input type="hidden" name="introduction_text" id="introduction_text">
+						<input type="hidden" name="introduction_text" id="introduction_text" value="<?= $quote['IntroductionText'] ?>">
 				</tr>
 				<tr>
 					<th scope="col">Details</th>
@@ -238,9 +238,9 @@ include 'include/sidenav.php';
 				    <input class="form-control" type="hidden" name="order_index[<?= $item['ItemID'] ?>]" value="<?= $i ?>">
 					<td><textarea class="form-control"  id="details" name="details[<?= $item['ItemID'] ?>]"><?= $item['Details'] ?></textarea></td>
 					<td><input class="form-control" type="text" id="deliver_to" name="deliver_to[<?= $item['ItemID'] ?>]" value="<?= $item['DeliverTo'] ?>"></td>
-					<td><input class="form-control" type="number" min="-10000.00" max="10000.00" step="0.01" class="cost_per_item" id="cost_per_item" name="cost_per_item[<?= $item['ItemID'] ?>]" value="<?= $item['CostPerItem'] ?>"></td>
-					<td><input class="form-control" type="number" min="0" max="10000" step="1" class="number_of_items" id="number_of_items" name="number_of_items[<?= $item['ItemID'] ?>]" value="<?= $item['NumberOfItems'] ?>"></td>
-					<td><input class="form-control" type="number" min="-10000.00" max="10000.00" step="0.01" class="cost_input" id="cost[<?= $item['ItemID'] ?>]" name="cost[<?= $item['ItemID'] ?>]" value="<?= $item['Cost'] ?>"></td>
+					<td><input class="form-control cost_per_item" type="number" min="-10000.00" max="10000.00" step="0.01" id="cost_per_item" name="cost_per_item[<?= $item['ItemID'] ?>]" value="<?= $item['CostPerItem'] ?>"></td>
+					<td><input class="form-control number_of_items" type="number" min="0" max="10000" step="1" id="number_of_items" name="number_of_items[<?= $item['ItemID'] ?>]" value="<?= $item['NumberOfItems'] ?>"></td>
+					<td><input class="form-control cost_input" type="number" min="-10000.00" max="10000.00" step="0.01" id="cost[<?= $item['ItemID'] ?>]" name="cost[<?= $item['ItemID'] ?>]" value="<?= $item['Cost'] ?>"></td>
 
 				<td style="display: flex; align-items: center;"><br>
 					<?php //if ($index > 0): ?>
@@ -300,7 +300,7 @@ include 'include/sidenav.php';
 
 
 <script>
-document.querySelectorAll('.cost_per_item, .number_of_items').forEach(item => {
+document.querySelectorAll(".cost_per_item, .number_of_items").forEach(item => {
     item.addEventListener('input', calculateCost);
 });
 

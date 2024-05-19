@@ -1,12 +1,12 @@
-# Security Policy
+# BloomQuote Security Policy
 
 ## Reporting a Vulnerability
 
-We take the security of our project seriously. If you discover a security vulnerability, please follow the guidelines below:
+The security for BloomQuote is taken seriously. If you discover a security vulnerability, please follow the guidelines below:
 
 ### How to Report
 
-1. **Create a Bug Report**: Go to the [Issues]([https://github.com/yourproject/issues](https://github.com/sirnails/BloomQuote/issues/new?assignees=&labels=Security&projects=&template=bug_report.md&title=)) section of our GitHub repository.
+1. **Create a Bug Report**: Go to the [Issues](<[https://github.com/yourproject/issues](https://github.com/sirnails/BloomQuote/issues/new?assignees=&labels=Security&projects=&template=bug_report.md&title=)>) section of our GitHub repository.
 2. **Label it "Security"**: Create a new issue and label it with the "Security" label to ensure it gets immediate attention.
 3. **Provide Detailed Information**: Include the following details in your report:
    - Description of the vulnerability

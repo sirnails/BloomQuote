@@ -14,6 +14,9 @@ if (isset($_GET['view']) && $_GET['view'] === 'archived') {
     $rows = fetchActiveCustomers($pdo);
 }
 
+function sanitizeInput($data) {
+    return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
+}
 
 // Handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,12 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST['action'] == 'add_customer' || isset($_POST['update'])) {
         // Add customer
-        $fname = trim($_POST['fname']); 
-        $lname = trim($_POST['lname']);
-        $phone = trim($_POST['phone']); 
-        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-        $address = formatUKAddress(trim($_POST['address']));
-        $IsArchived = isset($_POST['IsArchived']) ? 1 : 0;
+        $fname = sanitizeInput($_POST['fname']); 
+        $lname = sanitizeInput($_POST['lname']);
+        $phone = sanitizeInput($_POST['phone']); 
+        $email = filter_var(sanitizeInput($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $address = formatUKAddress(sanitizeInput($_POST['address']));
+        $IsArchived = isset(sanitizeInput($_POST['IsArchived'])) ? 1 : 0;
 
         if (empty($fname) || empty($lname) || empty($phone) || !$email || empty($address)) {
             die('Invalid input');
@@ -46,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 		if (isset($_POST['update'])) {
 			// Update customer
-			$CustomerID = $_POST['CustomerID'];
+			$CustomerID = sanitizeInput($_POST['CustomerID']);
 			updateCustomer($pdo, $CustomerID, $customerData);
 			header('Location: ' . strtok($_SERVER["REQUEST_URI"],'?'));
 			exit();

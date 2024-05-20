@@ -129,55 +129,57 @@ include 'include/sidenav.php';
 								<a href="?view=active">Show Active Customers</a> | <a href="?view=archived">Show Archived Customers</a>
                             </div>
                             <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-										<tr>
-											<th>View Customer Events</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>PhoneNumber</th>
-											<th>Email</th>
-											<th>DeliveryAddress</th>
-											<th>Delete Customer</th>
-											<th>Edit Customer Details</th>
-										</tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-											<th>View Customer Events</th>
-											<th>CustomerID</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>PhoneNumber</th>
-											<th>Email</th>
-											<th>DeliveryAddress</th>
-											<th>Delete Customer</th>
-											<th>Edit Customer Details</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-										<?php foreach ($rows as $row): ?>
-										<tr>
-											<td>
-											<a href="events.php?CustomerID=<?= $row['CustomerID'] ?>" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Events <?= $row['CustomerID'] ?></a>
-											</td>
-											<td><?= $row['FirstName'] ?></td>
-											<td><?= $row['LastName'] ?></td>
-											<td><?= $row['PhoneNumber'] ?></td>
-											<td><?= $row['Email'] ?></td>
-											<td><?= $row['DeliveryAddress'] ?></td>
-											
-											<td>
-												<a href="?id=<?= $row['CustomerID'] ?>" onclick="return confirm('Are you sure you want to delete this customer and all associated information?')">Delete</a>
-											</td>
-											
-											<td>
-												<a href="?edit=<?= $row['CustomerID'] ?>">Edit</a>
-											</td>
-										</tr>
-										<?php endforeach; ?>
-                                    </tbody>
-                                </table>
+								<div class="overflow-scroll">
+									<table id="datatablesSimple" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>View Customer Events</th>
+												<th>FirstName</th>
+												<th>LastName</th>
+												<th>PhoneNumber</th>
+												<th>Email</th>
+												<th>DeliveryAddress</th>
+												<th>Delete Customer</th>
+												<th>Edit Customer Details</th>
+											</tr>
+										</thead>
+										<tfoot>
+											<tr>
+												<th>View Customer Events</th>
+												<th>CustomerID</th>
+												<th>FirstName</th>
+												<th>LastName</th>
+												<th>PhoneNumber</th>
+												<th>Email</th>
+												<th>DeliveryAddress</th>
+												<th>Delete Customer</th>
+												<th>Edit Customer Details</th>
+											</tr>
+										</tfoot>
+										<tbody>
+											<?php foreach ($rows as $row): ?>
+											<tr>
+												<td>
+												<a href="events.php?CustomerID=<?= $row['CustomerID'] ?>" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Events <?= $row['CustomerID'] ?></a>
+												</td>
+												<td><?= $row['FirstName'] ?></td>
+												<td><?= $row['LastName'] ?></td>
+												<td><?= $row['PhoneNumber'] ?></td>
+												<td><?= $row['Email'] ?></td>
+												<td><?= $row['DeliveryAddress'] ?></td>
+												
+												<td>
+													<a href="?id=<?= $row['CustomerID'] ?>" onclick="return confirm('Are you sure you want to delete this customer and all associated information?')">Delete</a>
+												</td>
+												
+												<td>
+													<a href="?edit=<?= $row['CustomerID'] ?>">Edit</a>
+												</td>
+											</tr>
+											<?php endforeach; ?>
+										</tbody>
+									</table>
+								</div>
 								
 								<!-- Form to add new customer -->
 								<form action="" method="post">

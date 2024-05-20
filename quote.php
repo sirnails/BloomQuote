@@ -236,7 +236,7 @@ include 'include/sidenav.php';
 				<!-- <?php //foreach ($quoteItems as $item): ?> -->
 				<tr class="<?php echo ($i % 2 == 0) ? 'even' : 'odd'; ?>">
 				    <input class="form-control" type="hidden" name="order_index[<?= $item['ItemID'] ?>]" value="<?= $i ?>">
-					<td><textarea class="form-control"  id="details" name="details[<?= $item['ItemID'] ?>]"><?= $item['Details'] ?></textarea></td>
+					<td><textarea class="form-control" onclick="openModal()" id="details" name="details[<?= $item['ItemID'] ?>]"><?= $item['Details'] ?></textarea></td>
 					<td><input class="form-control" type="text" id="deliver_to" name="deliver_to[<?= $item['ItemID'] ?>]" value="<?= $item['DeliverTo'] ?>"></td>
 					<td><input class="form-control cost_per_item" type="number" min="-10000.00" max="10000.00" step="0.01" id="cost_per_item" name="cost_per_item[<?= $item['ItemID'] ?>]" value="<?= $item['CostPerItem'] ?>"></td>
 					<td><input class="form-control number_of_items" type="number" min="0" max="10000" step="1" id="number_of_items" name="number_of_items[<?= $item['ItemID'] ?>]" value="<?= $item['NumberOfItems'] ?>"></td>
@@ -279,6 +279,9 @@ include 'include/sidenav.php';
 					<td colspan="5">Deposit Paid: <input class="form-control" type="text" id="deposit_paid" name="deposit_paid" value="<?= $quote['DepositPaid'] ?>"></td>
 				</tr>
 				<tr>
+					<td colspan="5">Total Cost: <p id="total_cost"></p></td>
+				</tr>
+				<tr>
 					<td colspan="5">Deposit Due Date: <input class="form-control" type="date" id="deposit_due_date" name="deposit_due_date" value="<?= $quote['DepositDueDate'] ?>"></td>
 				</tr>
 				<tr>
@@ -296,10 +299,41 @@ include 'include/sidenav.php';
 
 <?php endif; ?>
 
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <label for="modalInput">Enter Text</label>
+        <textarea id="w3review" name="w3review" rows="4" cols="50"></textarea>
+        <button onclick="saveText()">Save</button>
+    </div>
+</div>
 
 
 
 <script>
+
+function openModal() {
+	if(!document.body.classList.contains('sb-sidenav-toggled') && window.innerWidth > 992){
+		document.body.classList.toggle('sb-sidenav-toggled');
+	}
+    document.getElementById('modal').style.display = 'block';
+}
+
+function closeModal() {
+	if(document.body.classList.contains('sb-sidenav-toggled')){
+		document.body.classList.toggle('sb-sidenav-toggled');
+	}
+    document.getElementById('modal').style.display = 'none';
+}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target == document.getElementById('modal')) closeModal();
+}
+
+
+getTotalCost();
+
 document.querySelectorAll(".cost_per_item, .number_of_items").forEach(item => {
     item.addEventListener('input', calculateCost);
 });
@@ -316,6 +350,13 @@ function calculateCost(event) {
     } else {
         costInput.value = "123";
     }
+	getTotalCost();
+}
+
+function getTotalCost() {
+	let totalCost = 0;
+	document.querySelectorAll(".cost_input").forEach(item => totalCost += Number(item.value));
+	document.getElementById("total_cost").innerText = totalCost;
 }
 
 

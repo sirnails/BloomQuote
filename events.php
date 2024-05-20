@@ -73,45 +73,47 @@ $results = fetchAllEvents($pdo); ?>
                                 <i class="fas fa-table me-1"></i>
 							</div>
 							<div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-										<tr>
-											<th>View Quotes</th>
-											<th>First Name</th>
-											<th>Last Name</th>
-											<th>EventDate</th>
-											<th>EventType</th>
-											<th>IsBooked</th>
-											<th>Edit Event</th>
-										</tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-											<th>View Quotes</th>
-						<th>Customer Name</th>
-						<th>Event Date</th>
-						<th>Event Type</th>
-											<th>Edit Event</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-										<?php foreach ($results as $Event): ?>
-										<tr>
-											<td>
-												<a href="quotes.php?CustomerID=<?= $Event['CustomerID'] ?>&EventID=<?= $Event['EventID'] ?>&action=view" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Quotes <?= $Event['EventID'] ?></a>
-											</td>
-											<td><?= $Event['FirstName'] ?></td>
-											<td><?= $Event['LastName'] ?></td>
-											<td><?= $Event['EventDate'] ?></td>
-											<td><?= $Event['EventType'] ?></td>
-											<td><?= $Event['IsBooked'] ? 'Yes' : 'No' ?></td>
-											<td>
-												<button onclick="updateForm(<?= $Event['EventID'] ?>, '<?= $Event['EventDate'] ?>', '<?= $Event['EventType'] ?>', <?= $Event['IsBooked'] ?>)">Edit</button>
-											</td>
-										</tr>
-										<?php endforeach; ?>
-                                    </tbody>
-                                </table>
+								<div class="overflow-scroll">
+									<table id="datatablesSimple" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>View Quotes</th>
+												<th>First Name</th>
+												<th>Last Name</th>
+												<th>EventDate</th>
+												<th>EventType</th>
+												<th>IsBooked</th>
+												<th>Edit Event</th>
+											</tr>
+										</thead>
+										<tfoot>
+											<tr>
+												<th>View Quotes</th>
+							<th>Customer Name</th>
+							<th>Event Date</th>
+							<th>Event Type</th>
+												<th>Edit Event</th>
+											</tr>
+										</tfoot>
+										<tbody>
+											<?php foreach ($results as $Event): ?>
+											<tr>
+												<td>
+													<a href="quotes.php?CustomerID=<?= $Event['CustomerID'] ?>&EventID=<?= $Event['EventID'] ?>&action=view" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block;">View Quotes <?= $Event['EventID'] ?></a>
+												</td>
+												<td><?= $Event['FirstName'] ?></td>
+												<td><?= $Event['LastName'] ?></td>
+												<td><?= $Event['EventDate'] ?></td>
+												<td><?= $Event['EventType'] ?></td>
+												<td><?= $Event['IsBooked'] ? 'Yes' : 'No' ?></td>
+												<td>
+													<button onclick="updateForm(<?= $Event['EventID'] ?>, '<?= $Event['EventDate'] ?>', '<?= $Event['EventType'] ?>', <?= $Event['IsBooked'] ?>)">Edit</button>
+												</td>
+											</tr>
+											<?php endforeach; ?>
+										</tbody>
+									</table>
+								</div>
 <?php } else { ?>
 
 

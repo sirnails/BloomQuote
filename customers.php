@@ -21,12 +21,12 @@ function sanitizeInput($data) {
 // Handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate CSRF token
-    if (!hash_equals($csrf, $_POST['csrf'])) {
+    if (!isset($_POST['csrf']) || !hash_equals($csrf, $_POST['csrf'])) {
         die('Invalid CSRF token');
     }
 
-    if ($_POST['action'] == 'add_customer' || isset($_POST['update'])) {
-        // Add customer
+    if (isset($_POST['action']) && ($_POST['action'] == 'add_customer' || isset($_POST['update']))) {
+        // Add or update customer
         $fname = sanitizeInput($_POST['fname']); 
         $lname = sanitizeInput($_POST['lname']);
         $phone = sanitizeInput($_POST['phone']); 
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			// Add new customer
 			addNewCustomer($pdo, $customerData);
 		}
-    }
+	}
 
     // Redirect to avoid form resubmission
     header("Location: " . $_SERVER["REQUEST_URI"]);

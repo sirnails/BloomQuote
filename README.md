@@ -1,9 +1,10 @@
 # BloomQuote
 Quote management app for a florist
-![BloomQuote Logo](https://github.com/sirnails/BloomQuote/assets/12369983/585169ce-3596-4761-9318-26df39459b83)
 
 ## Introduction
+<img align="right" src="https://github.com/sirnails/BloomQuote/assets/12369983/585169ce-3596-4761-9318-26df39459b83" width="200" height="200"/>
 The BloomQuote application, is a web-based platform. This software aims to streamline the process of creating custom quote proposals and managing events for florists. BloomQuote provides users with a comprehensive platform where they can efficiently capture and organize the details of a customers wedding quotation. BloomQuote will not handle payments or facilitate communication between buyers and sellers. Instead, it serves as a detailed reference for a florist to track issued quotes and manage updates to quotations.
+<br /><br />
 
 # Definitions, Acronyms, and Abbreviations
 - BQ: BloomQuote.
@@ -32,3 +33,6 @@ The Florist Event Management and Quotation Software is designed to streamline th
 - Pinterest Integration: Enhance the customer consultation process by integrating with Pinterest to generate a mood board for each customer.
 - Scalability: Design the software to handle a substantial number of events per year, with no artificial limit on storage.
 The software aims to provide a comprehensive, user-friendly solution that meets the unique needs of florists, helping them manage their business more efficiently and effectively.
+
+-------
+[<img alt="Deployed with FTP Deploy Action" src="https://img.shields.io/badge/Deployed With-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=2b9348">](https://github.com/SamKirkland/FTP-Deploy-Action)

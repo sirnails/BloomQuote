@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $phone = sanitizeInput($_POST['phone']); 
         $email = filter_var(sanitizeInput($_POST['email']), FILTER_VALIDATE_EMAIL);
         $address = formatUKAddress(sanitizeInput($_POST['address']));
-        $IsArchived = isset(sanitizeInput($_POST['IsArchived'])) ? 1 : 0;
+        $IsArchived = isset($_POST['IsArchived']) ? 1 : 0;
 
         if (empty($fname) || empty($lname) || empty($phone) || !$email || empty($address)) {
             die('Invalid input');

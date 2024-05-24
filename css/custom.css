@@ -1,0 +1,21 @@
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+}
+
+.button-grid .btn {
+    width: 100%;
+}
+
+table, p {
+    white-space: pre-wrap;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+    white-space: pre-wrap;
+}
+.pre-wrap {
+    white-space: pre-wrap; /* CSS to preserve whitespace and new lines */
+}

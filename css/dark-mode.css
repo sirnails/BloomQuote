@@ -1,0 +1,51 @@
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-mode .navbar {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .navbar .navbar-brand,
+.dark-mode .navbar .nav-link {
+    color: #ffffff !important;
+}
+
+.dark-mode .btn,
+.dark-mode .form-control {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+.dark-mode .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.dark-mode .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.dark-mode .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.dark-mode .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.dark-mode .table {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.dark-mode .table th,
+.dark-mode .table td {
+    border-color: #555555;
+}

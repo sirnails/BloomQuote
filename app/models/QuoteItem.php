@@ -8,7 +8,7 @@ class QuoteItem {
 
     public function create($quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $order) {
         $stmt = $this->db->prepare("INSERT INTO quote_items (quote_id, description, delivery_location, cost_per_item, quantity, total_cost, `order`) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("issdiii", $quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $order);
+        $stmt->bind_param("issdidi", $quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $order);
         return $stmt->execute();
     }
 
@@ -36,7 +36,7 @@ class QuoteItem {
 
     public function update($item_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost) {
         $stmt = $this->db->prepare("UPDATE quote_items SET description = ?, delivery_location = ?, cost_per_item = ?, quantity = ?, total_cost = ? WHERE id = ?");
-        $stmt->bind_param("ssdiid", $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $item_id);
+        $stmt->bind_param("ssdidd", $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $item_id);
         return $stmt->execute();
     }
 

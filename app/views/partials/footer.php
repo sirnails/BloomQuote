@@ -12,8 +12,8 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-24 12:05pm <br>
-    colour of buttons in dark mode
+    Website Last updated 2024-05-24 22:45 <br>
+    Ability to delete a quote
 </div>
 
     <script src="js/jquery.min.js"></script>

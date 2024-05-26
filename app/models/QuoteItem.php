@@ -108,6 +108,12 @@ class QuoteItem {
         }
     }
     
+    public function deleteAllQuoteItems($quote_id) {
+        $stmt = $this->db->prepare("DELETE FROM quote_items WHERE quote_id = ?");
+        $stmt->bind_param("i", $quote_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 
 }
 ?>

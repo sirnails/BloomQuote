@@ -49,7 +49,7 @@ switch ($action) {
         break;
     case 'view_quotes':
         $controller = new QuoteController();
-        $controller->index();
+        $controller->list_quotes();
         break;
     case 'print_quote':
         $controller = new QuoteController();
@@ -66,6 +66,11 @@ switch ($action) {
     case 'delete_item':
         $controller = new QuoteController();
         $controller->delete_item();
+        break;
+    case 'delete_quote':
+        $controller = new QuoteController();
+        $controller->deleteAllQuoteItems();
+        $controller->deleteQuote();
         break;
     default:
         if (isset($_SESSION['user_id'])) {

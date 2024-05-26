@@ -30,7 +30,7 @@ class Quote {
         $data['payment_terms']);
         $stmt->execute();
     }
-
+    
     public function getQuoteById($id) {
         $stmt = $this->db->prepare("SELECT * FROM quotes WHERE id = ?");
         $stmt->bind_param("i", $id);
@@ -78,5 +78,10 @@ class Quote {
         return $stmt->execute();
     }
     
+    public function deleteQuote($quote_id) {
+        $stmt = $this->db->prepare("DELETE FROM quotes WHERE id = ?");
+        $stmt->bind_param("i", $quote_id);
+        return $stmt->execute();
+    }
 }
 ?>

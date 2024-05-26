@@ -1,5 +1,5 @@
 <?php include_once './app/views/partials/navbar.php'; ?>
-
+<a href="index.php?action=delete_quote&id=<?php echo $quote['id']; ?>" style="float: right;" onclick="return confirm('Are you sure you want to delete this quote forever?');" class="btn btn-danger mb-3">Delete</a>
 <a href="index.php?action=edit_quote&id=<?php echo $quote['id']; ?>" class="btn btn-primary mb-3">Edit Quote Header</a>
 <a href="index.php?action=print_quote&id=<?php echo $quote['id']; ?>" class="btn btn-success mb-3">Print Quote</a>
 <h1>Quote Details</h1>

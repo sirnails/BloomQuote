@@ -65,7 +65,7 @@ $todayDate = date('d-m-Y');
     <div class="container">
         <div class="logo">
             <img src="img/logo.png" alt="Company Logo" width="300">
-            <p><strong>Bridal Quotation</strong> <?php echo $todayDate; ?></p>
+            <p><strong>Quotation Issue Date</strong> <?php echo $todayDate; ?></p>
         </div>
         <div class="quote-header">
             <hr>

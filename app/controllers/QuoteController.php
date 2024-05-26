@@ -105,7 +105,6 @@ class QuoteController {
         $this->quoteItemModel->reorderItems($quote_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
-
     
     public function show($id) {
         $quote = $this->quoteModel->getQuoteById($id);
@@ -113,10 +112,10 @@ class QuoteController {
         include_once './app/views/quote/show.php';
     }
 
-    public function index() {
+    public function list_quotes() {
         $user_id = $_SESSION['user_id'];
         $quotes = $this->quoteModel->getQuotesByUserId($user_id);
-        include_once './app/views/quote/index.php';
+        include_once './app/views/quote/list_quotes.php';
     }
 
     public function edit_quote() {
@@ -170,7 +169,17 @@ class QuoteController {
         include_once './app/views/quote/print.php';
     }
     
+    public function deleteAllQuoteItems(){
+        $quote_id = $_GET['id'];
+        $this->quoteItemModel->deleteAllQuoteItems($quote_id);
+    }
 
+    public function deleteQuote(){
+        $quote_id = $_GET['id'];
+        $this->quoteModel->deleteQuote($quote_id);
+        header("Location: index.php?action=view_quotes");
+
+    }
 }
 
 ?>

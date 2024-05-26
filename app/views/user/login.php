@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
+<?php include_once './app/views/partials/navbar.php'; ?>
+
         <h1>Login</h1>
         <form method="POST" action="index.php?action=login">
             <div class="form-group">
@@ -18,7 +12,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
-    </div>
-    <script src="js/bootstrap.min.js"></script>
-</body>
-</html>
+
+        <a href="index.php?action=register" class="btn btn-secondary">Register</a>
+
+<?php include_once './app/views/partials/footer.php'; ?>

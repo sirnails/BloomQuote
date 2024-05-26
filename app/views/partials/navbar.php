@@ -13,6 +13,9 @@
     </style>
 </head>
 <body>
+<?php
+if (isset($_SESSION['user_id'])) { ?>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">BloomQuote</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +34,8 @@
                 </li>
             </ul>
         </div>
+        
+        <?php } ?>
         <div class="ml-auto">
             <button class="btn btn-outline-secondary toggle-dark-mode">Toggle Dark Mode</button>
         </div>

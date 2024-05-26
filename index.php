@@ -14,15 +14,9 @@ try {
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
+if (isset($_SESSION['user_id'])) { 
+
 switch ($action) {
-    case 'register':
-        $controller = new UserController();
-        $controller->register();
-        break;
-    case 'login':
-        $controller = new UserController();
-        $controller->login();
-        break;
     case 'logout':
         $controller = new UserController();
         $controller->logout();
@@ -73,11 +67,22 @@ switch ($action) {
         $controller->deleteQuote();
         break;
     default:
-        if (isset($_SESSION['user_id'])) {
-            include_once './app/views/home.php';
-        } else {
-            include_once './app/views/landing.php';
-        }
+        include_once './app/views/home.php';
         break;
+    }
+} else {
+    switch ($action) {
+        case 'register':
+            $controller = new UserController();
+            $controller->register();
+            break;
+        case 'login':
+            $controller = new UserController();
+            $controller->login();
+            break;
+        default:
+            include_once './app/views/landing.php';
+            break;
+        }
 }
 ?>

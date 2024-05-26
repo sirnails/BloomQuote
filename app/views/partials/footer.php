@@ -12,8 +12,8 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-24 11:55am <br>
-    Moved Copyright footer to be floating at end of content rather than absolute.
+    Website Last updated 2024-05-24 12:05pm <br>
+    colour of buttons in dark mode
 </div>
 
     <script src="js/jquery.min.js"></script>

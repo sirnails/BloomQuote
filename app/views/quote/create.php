@@ -1,6 +1,7 @@
 <?php include_once './app/views/partials/navbar.php'; ?>
         <h1>Create Quote</h1>
         <form method="POST" action="index.php?action=create_quote">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="form-group">
                 <label for="wedding_date">Wedding Date</label>
                 <input type="date" class="form-control" id="wedding_date" name="wedding_date" required>

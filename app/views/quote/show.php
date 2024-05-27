@@ -66,6 +66,7 @@
 
 <h2>Add Quote Item</h2>
 <form method="POST" action="index.php?action=add_item">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <input type="hidden" name="quote_id" value="<?php echo $quote['id']; ?>">
     <div class="form-group">
         <label for="description">Details</label>

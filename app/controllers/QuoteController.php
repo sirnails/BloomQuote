@@ -12,8 +12,15 @@ class QuoteController {
         $this->quoteItemModel = new QuoteItem();
     }
 
+    private function checkCSRFToken($token) {
+        if (!hash_equals($_SESSION['csrf_token'], $token)) {
+            die('Invalid CSRF token');
+        }
+    }
+
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $data = [
                 'user_id' => $_SESSION['user_id'],
                 'wedding_date' => $_POST['wedding_date'],
@@ -44,6 +51,7 @@ class QuoteController {
 
     public function add_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $quote_id = $_POST['quote_id'];
             $description = $_POST['description'];
             $delivery_location = $_POST['delivery_location'];
@@ -71,6 +79,7 @@ class QuoteController {
 
     public function edit_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $item_id = $_POST['item_id'];
             $quote_id = $_POST['quote_id'];
             $description = $_POST['description'];
@@ -120,6 +129,7 @@ class QuoteController {
 
     public function edit_quote() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $id = $_POST['id'];
             $data = [
                 'wedding_date' => $_POST['wedding_date'],

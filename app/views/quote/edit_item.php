@@ -1,6 +1,7 @@
 <?php include_once './app/views/partials/navbar.php'; ?>
         <h1>Edit Quote Item</h1>
         <form method="POST" action="index.php?action=edit_item">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
             <input type="hidden" name="quote_id" value="<?php echo $item['quote_id']; ?>">
             <div class="form-group">

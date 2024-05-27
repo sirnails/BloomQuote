@@ -2,6 +2,7 @@
 
     <h1>Register</h1>
     <form method="POST" action="index.php?action=register">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" class="form-control" id="username" name="username" required>

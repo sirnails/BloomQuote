@@ -12,8 +12,8 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-24 22:45 <br>
-    Ability to delete a quote
+    Website Last updated 2024-05-27  10:45<br>
+    Added CSRF token checking
 </div>
 
     <script src="js/jquery.min.js"></script>

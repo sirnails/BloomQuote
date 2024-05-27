@@ -1,6 +1,7 @@
 <?php include_once './app/views/partials/navbar.php'; ?>
         <h1>Edit Quote Header</h1>
         <form method="POST" action="index.php?action=edit_quote">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
             <div class="form-group">
                 <label for="wedding_date">Wedding Date</label>

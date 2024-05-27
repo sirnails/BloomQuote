@@ -2,6 +2,7 @@
 
         <h1>Add Quote Item</h1>
         <form method="POST" action="index.php?action=add_item">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="quote_id" value="<?php echo $_GET['quote_id']; ?>">
             <div class="form-group">
                 <label for="description">Details</label>

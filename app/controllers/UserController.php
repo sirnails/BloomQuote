@@ -9,8 +9,14 @@ class UserController {
         $this->userModel = new User();
     }
 
+    private function checkCSRFToken($token) {
+        if (!hash_equals($_SESSION['csrf_token'], $token)) {
+            die('Invalid CSRF token');
+        }
+    }
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $username = $_POST['username'];
             $password = $_POST['password'];
             $email = $_POST['email'];
@@ -26,6 +32,7 @@ class UserController {
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
             $username = $_POST['username'];
             $password = $_POST['password'];
             $user = $this->userModel->login($username, $password);

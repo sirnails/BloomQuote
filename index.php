@@ -5,10 +5,23 @@
 * Checks if an action parameter is set in the URL and stores it in the $action variable.
 * If the user is logged in (i.e. a user_id is set in the session), the code will continue executing.
 */
-session_start();
 
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', TRUE);
+ini_set('log_errors', TRUE);
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',
+    'secure' => isset($_SERVER['HTTPS']), // Secure only if using HTTPS
+    'httponly' => true,
+    'samesite' => 'Strict'
+]);
+
+session_start();
+session_regenerate_id(true);
+
 
 // Generate a CSRF token if one does not exist
 if (empty($_SESSION['csrf_token'])) {

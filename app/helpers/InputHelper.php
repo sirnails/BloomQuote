@@ -6,7 +6,7 @@ class InputHelper {
     }
 
     public static function sanitizeString($data) {
-        return filter_var($data, FILTER_SANITIZE_STRING);
+        return filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public static function sanitizeEmail($data) {

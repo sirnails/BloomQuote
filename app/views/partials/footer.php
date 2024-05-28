@@ -12,8 +12,8 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-27  10:45<br>
-    Added CSRF token checking
+    Website Last updated 2024-05-28 22:30<br>
+    input checking added
 </div>
 
     <script src="js/jquery.min.js"></script>

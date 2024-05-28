@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering
+
 /** 
 * Starts a PHP session and sets up error reporting.
 * Loads the required configuration and controller files.
@@ -124,4 +126,5 @@ switch ($action) {
             break;
         }
 }
+ob_end_flush(); // Flush the buffer at the end
 ?>

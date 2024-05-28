@@ -13,7 +13,7 @@
 
 <div id="copyright">
     Website Last updated 2024-05-29 00:10<br>
-    Display username in header.
+    Remove whitespace and added buffering
 
 </div>
 

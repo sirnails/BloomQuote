@@ -1,6 +1,8 @@
 <?php
 
 require_once './app/models/User.php';
+require_once './app/helpers/SanitizationHelper.php';
+require_once './app/helpers/InputHelper.php';
 
 class UserController {
     private $userModel;
@@ -17,9 +19,11 @@ class UserController {
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $email = $_POST['email'];
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+
+            $username = $sanitizedData['username'];
+            $password = $sanitizedData['password'];
+            $email = SanitizationHelper::sanitizeInput($sanitizedData['email']);
             if ($this->userModel->register($username, $password, $email)) {
                 header("Location: index.php?action=login");
             } else {
@@ -33,8 +37,10 @@ class UserController {
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $username = $_POST['username'];
-            $password = $_POST['password'];
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+
+            $username = SanitizationHelper::sanitizeInput($sanitizedData['username']);
+            $password = SanitizationHelper::sanitizeInput($sanitizedData['password']);
             $user = $this->userModel->login($username, $password);
             if ($user) {
                 $_SESSION['user_id'] = $user['id'];

@@ -2,6 +2,8 @@
 
 require_once './app/models/Quote.php';
 require_once './app/models/QuoteItem.php';
+require_once './app/helpers/SanitizationHelper.php';
+require_once './app/helpers/InputHelper.php';
 
 class QuoteController {
     private $quoteModel;
@@ -21,26 +23,29 @@ class QuoteController {
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
+            
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            
             $data = [
                 'user_id' => $_SESSION['user_id'],
-                'wedding_date' => $_POST['wedding_date'],
-                'billing_address' => $_POST['billing_address'],
-                'time' => $_POST['time'],
-                'bride_name' => $_POST['bride_name'],
-                'bride_email' => $_POST['bride_email'],
-                'bride_contact' => $_POST['bride_contact'],
-                'groom_name' => $_POST['groom_name'],
-                'groom_email' => $_POST['groom_email'],
-                'groom_contact' => $_POST['groom_contact'],
-                'ceremony_address' => $_POST['ceremony_address'],
-                'venue_address' => $_POST['venue_address'],
-                'other_address' => $_POST['other_address'],
-                'days_for_deposit' => $_POST['days_for_deposit'],
-                'deposit_date' => date('Y-m-d', strtotime("+{$_POST['days_for_deposit']} days")),
-                'final_consultation_month' => date('F Y', strtotime('-1 month', strtotime($_POST['wedding_date']))),
+                'wedding_date' => $sanitizedData['wedding_date'],
+                'billing_address' => $sanitizedData['billing_address'],
+                'time' => $sanitizedData['time'],
+                'bride_name' => $sanitizedData['bride_name'],
+                'bride_email' => $sanitizedData['bride_email'],
+                'bride_contact' => $sanitizedData['bride_contact'],
+                'groom_name' => $sanitizedData['groom_name'],
+                'groom_email' => $sanitizedData['groom_email'],
+                'groom_contact' => $sanitizedData['groom_contact'],
+                'ceremony_address' => $sanitizedData['ceremony_address'],
+                'venue_address' => $sanitizedData['venue_address'],
+                'other_address' => $sanitizedData['other_address'],
+                'days_for_deposit' => $sanitizedData['days_for_deposit'],
+                'deposit_date' => date('Y-m-d', strtotime("+{$sanitizedData['days_for_deposit']} days")),
+                'final_consultation_month' => date('F Y', strtotime('-1 month', strtotime($sanitizedData['wedding_date']))),
                 'total_cost' => 0, // This will be calculated based on the line items
-                'custom_message' => $_POST['custom_message'],
-                'payment_terms' => $_POST['payment_terms']
+                'custom_message' => $sanitizedData['custom_message'],
+                'payment_terms' => $sanitizedData['payment_terms']
             ];
             $this->quoteModel->create($data);
             header("Location: index.php?action=show_quote&id=" . $this->quoteModel->getLastInsertedId());
@@ -52,12 +57,19 @@ class QuoteController {
     public function add_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $quote_id = $_POST['quote_id'];
-            $description = $_POST['description'];
-            $delivery_location = $_POST['delivery_location'];
-            $cost_per_item = $_POST['cost_per_item'];
-            $quantity = $_POST['quantity'];
+            
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+
+            $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+            $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
+            $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
+            $cost_per_item = floatval($sanitizedData['cost_per_item']);
+            $quantity = intval($sanitizedData['quantity']);
             $total_cost = $cost_per_item * $quantity;
+
+            if ($quote_id === false) {
+                die('Invalid quote ID');
+            }
     
             // Determine the next order value
             $next_order = $this->quoteItemModel->getNextOrderValue($quote_id);
@@ -71,7 +83,10 @@ class QuoteController {
     
             header("Location: index.php?action=show_quote&id=" . $quote_id);
         } else {
-            $quote_id = $_GET['quote_id'];
+            $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+            if ($quote_id === false) {
+                die('Invalid quote ID');
+            }
             include_once './app/views/quote/add_item.php';
         }
     }
@@ -80,13 +95,20 @@ class QuoteController {
     public function edit_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $item_id = $_POST['item_id'];
-            $quote_id = $_POST['quote_id'];
-            $description = $_POST['description'];
-            $delivery_location = $_POST['delivery_location'];
-            $cost_per_item = $_POST['cost_per_item'];
-            $quantity = $_POST['quantity'];
+            
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+
+            $item_id = InputHelper::sanitizeInt($sanitizedData['item_id']);
+            $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+            $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
+            $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
+            $cost_per_item = floatval($sanitizedData['cost_per_item']);
+            $quantity = intval($sanitizedData['quantity']);
             $total_cost = $cost_per_item * $quantity;
+
+            if ($item_id === false || $quote_id === false) {
+                die('Invalid item or quote ID');
+            }
 
             // Update the quote item
             $this->quoteItemModel->update($item_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost);
@@ -101,21 +123,33 @@ class QuoteController {
 
             header("Location: index.php?action=show_quote&id=" . $quote_id);
         } else {
-            $item_id = $_GET['item_id'];
+            $item_id = InputHelper::sanitizeInt($_GET['item_id']);
+            if ($item_id === false) {
+                die('Invalid item ID');
+            }
             $item = $this->quoteItemModel->getItemById($item_id);
             include_once './app/views/quote/edit_item.php';
         }
     }
 
     public function delete_item() {
-        $item_id = $_GET['item_id'];
-        $quote_id = $_GET['quote_id'];
+        $item_id = InputHelper::sanitizeInt($_GET['item_id']);
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+
+        if ($item_id === false || $quote_id === false) {
+            die('Invalid item or quote ID');
+        }
+
         $this->quoteItemModel->delete($item_id);
         $this->quoteItemModel->reorderItems($quote_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
     
     public function show($id) {
+        $id = InputHelper::sanitizeInt($id);
+        if ($id === false) {
+            die('Invalid quote ID');
+        }
         $quote = $this->quoteModel->getQuoteById($id);
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/show.php';
@@ -130,45 +164,61 @@ class QuoteController {
     public function edit_quote() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $id = $_POST['id'];
+            
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+
+            $id = InputHelper::sanitizeInt($sanitizedData['id']);
+            if ($id === false) {
+                die('Invalid quote ID');
+            }
+
             $data = [
-                'wedding_date' => $_POST['wedding_date'],
-                'billing_address' => $_POST['billing_address'],
-                'time' => $_POST['time'],
-                'bride_name' => $_POST['bride_name'],
-                'bride_email' => $_POST['bride_email'],
-                'bride_contact' => $_POST['bride_contact'],
-                'groom_name' => $_POST['groom_name'],
-                'groom_email' => $_POST['groom_email'],
-                'groom_contact' => $_POST['groom_contact'],
-                'ceremony_address' => $_POST['ceremony_address'],
-                'venue_address' => $_POST['venue_address'],
-                'other_address' => $_POST['other_address'],
-                'days_for_deposit' => $_POST['days_for_deposit'],
-                'deposit_date' => date('Y-m-d', strtotime("+{$_POST['days_for_deposit']} days")),
-                'final_consultation_month' => date('F Y', strtotime('-1 month', strtotime($_POST['wedding_date']))),
-                'custom_message' => $_POST['custom_message'],
-                'payment_terms' => $_POST['payment_terms']
+                'wedding_date' => $sanitizedData['wedding_date'],
+                'billing_address' => $sanitizedData['billing_address'],
+                'time' => $sanitizedData['time'],
+                'bride_name' => $sanitizedData['bride_name'],
+                'bride_email' => $sanitizedData['bride_email'],
+                'bride_contact' => $sanitizedData['bride_contact'],
+                'groom_name' => $sanitizedData['groom_name'],
+                'groom_email' => $sanitizedData['groom_email'],
+                'groom_contact' => $sanitizedData['groom_contact'],
+                'ceremony_address' => $sanitizedData['ceremony_address'],
+                'venue_address' => $sanitizedData['venue_address'],
+                'other_address' => $sanitizedData['other_address'],
+                'days_for_deposit' => $sanitizedData['days_for_deposit'],
+                'deposit_date' => date('Y-m-d', strtotime("+{$sanitizedData['days_for_deposit']} days")),
+                'final_consultation_month' => date('F Y', strtotime('-1 month', strtotime($sanitizedData['wedding_date']))),
+                'custom_message' => $sanitizedData['custom_message'],
+                'payment_terms' => $sanitizedData['payment_terms']
             ];
             $this->quoteModel->update($id, $data);
             header("Location: index.php?action=show_quote&id=" . $id);
         } else {
-            $id = $_GET['id'];
+            $id = InputHelper::sanitizeInt($_GET['id']);
+            if ($id === false) {
+                die('Invalid quote ID');
+            }
             $quote = $this->quoteModel->getQuoteById($id);
             include_once './app/views/quote/edit_quote.php';
         }
     }
 
     public function move_item_up() {
-        $item_id = $_GET['item_id'];
-        $quote_id = $_GET['quote_id'];
+        $item_id = InputHelper::sanitizeInt($_GET['item_id']);
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        if ($item_id === false || $quote_id === false) {
+            die('Invalid item or quote ID');
+        }
         $this->quoteItemModel->moveItemUp($item_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
     
     public function move_item_down() {
-        $item_id = $_GET['item_id'];
-        $quote_id = $_GET['quote_id'];
+        $item_id = InputHelper::sanitizeInt($_GET['item_id']);
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        if ($item_id === false || $quote_id === false) {
+            die('Invalid item or quote ID');
+        }
         $this->quoteItemModel->moveItemDown($item_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
@@ -180,12 +230,12 @@ class QuoteController {
     }
     
     public function deleteAllQuoteItems(){
-        $quote_id = $_GET['id'];
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
         $this->quoteItemModel->deleteAllQuoteItems($quote_id);
     }
 
     public function deleteQuote(){
-        $quote_id = $_GET['id'];
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
         $this->quoteModel->deleteQuote($quote_id);
         header("Location: index.php?action=view_quotes");
 

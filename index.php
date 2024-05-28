@@ -6,6 +6,8 @@
 * If the user is logged in (i.e. a user_id is set in the session), the code will continue executing.
 */
 
+require_once './app/helpers/InputHelper.php';
+
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('log_errors', TRUE);
@@ -36,7 +38,7 @@ try {
     echo 'Error: ',  $e->getMessage(), "\n";
 }
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
+$action = isset($_GET['action']) ? InputHelper::sanitizeString($_GET['action']) : '';
 
 if (isset($_SESSION['user_id'])) { 
 
@@ -67,7 +69,7 @@ switch ($action) {
         break;
     case 'show_quote':
         $controller = new QuoteController();
-        $controller->show($_GET['id']);
+        $controller->show(InputHelper::sanitizeInt($_GET['id']));
         break;
     case 'view_quotes':
         $controller = new QuoteController();
@@ -75,7 +77,7 @@ switch ($action) {
         break;
     case 'print_quote':
         $controller = new QuoteController();
-        $controller->print($_GET['id']);
+        $controller->print(InputHelper::sanitizeInt($_GET['id']));
         break;
     case 'move_item_up':
         $controller = new QuoteController();

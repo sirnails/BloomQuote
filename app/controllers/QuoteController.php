@@ -20,6 +20,15 @@ class QuoteController {
         }
     }
 
+    private function authorizeUser($quote_id) {
+        $quote = $this->quoteModel->getQuoteById($quote_id);
+        if ($quote['user_id'] !== $_SESSION['user_id']) {
+            header("Location: index.php?action=view_quotes");
+            die('Unauthorized access');
+        }
+        return $quote; // return quote for further use
+    }
+
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -61,6 +70,8 @@ class QuoteController {
             $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
 
             $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+            $quote = $this->authorizeUser($quote_id); // Check authorization
+
             $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
             $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
             $cost_per_item = floatval($sanitizedData['cost_per_item']);
@@ -87,10 +98,10 @@ class QuoteController {
             if ($quote_id === false) {
                 die('Invalid quote ID');
             }
+            $quote = $this->authorizeUser($quote_id); // Check authorization
             include_once './app/views/quote/add_item.php';
         }
     }
-    
 
     public function edit_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -100,6 +111,8 @@ class QuoteController {
 
             $item_id = InputHelper::sanitizeInt($sanitizedData['item_id']);
             $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+            $quote = $this->authorizeUser($quote_id); // Check authorization
+
             $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
             $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
             $cost_per_item = floatval($sanitizedData['cost_per_item']);
@@ -128,6 +141,7 @@ class QuoteController {
                 die('Invalid item ID');
             }
             $item = $this->quoteItemModel->getItemById($item_id);
+            $quote = $this->authorizeUser($item['quote_id']); // Check authorization
             include_once './app/views/quote/edit_item.php';
         }
     }
@@ -135,6 +149,7 @@ class QuoteController {
     public function delete_item() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        $quote = $this->authorizeUser($quote_id); // Check authorization
 
         if ($item_id === false || $quote_id === false) {
             die('Invalid item or quote ID');
@@ -150,7 +165,7 @@ class QuoteController {
         if ($id === false) {
             die('Invalid quote ID');
         }
-        $quote = $this->quoteModel->getQuoteById($id);
+        $quote = $this->authorizeUser($id); // Check authorization
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/show.php';
     }
@@ -171,6 +186,7 @@ class QuoteController {
             if ($id === false) {
                 die('Invalid quote ID');
             }
+            $quote = $this->authorizeUser($id); // Check authorization
 
             $data = [
                 'wedding_date' => $sanitizedData['wedding_date'],
@@ -198,7 +214,7 @@ class QuoteController {
             if ($id === false) {
                 die('Invalid quote ID');
             }
-            $quote = $this->quoteModel->getQuoteById($id);
+            $quote = $this->authorizeUser($id); // Check authorization
             include_once './app/views/quote/edit_quote.php';
         }
     }
@@ -206,6 +222,8 @@ class QuoteController {
     public function move_item_up() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        $quote = $this->authorizeUser($quote_id); // Check authorization
+
         if ($item_id === false || $quote_id === false) {
             die('Invalid item or quote ID');
         }
@@ -216,6 +234,8 @@ class QuoteController {
     public function move_item_down() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        $quote = $this->authorizeUser($quote_id); // Check authorization
+
         if ($item_id === false || $quote_id === false) {
             die('Invalid item or quote ID');
         }
@@ -224,21 +244,31 @@ class QuoteController {
     }
     
     public function print($id) {
-        $quote = $this->quoteModel->getQuoteById($id);
+        $quote = $this->authorizeUser($id); // Check authorization
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/print.php';
     }
     
     public function deleteAllQuoteItems(){
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        if ($quote_id === false) {
+            die('Invalid quote ID');
+        }
+        $quote = $this->authorizeUser($quote_id); // Check authorization
+        
         $this->quoteItemModel->deleteAllQuoteItems($quote_id);
     }
 
     public function deleteQuote(){
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        if ($quote_id === false) {
+            die('Invalid quote ID');
+        }
+        $quote = $this->authorizeUser($quote_id); // Check authorization
+
+        $this->quoteItemModel->deleteAllQuoteItems($quote_id);
         $this->quoteModel->deleteQuote($quote_id);
         header("Location: index.php?action=view_quotes");
-
     }
 }
 

@@ -12,8 +12,8 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-28 22:30<br>
-    input checking added
+    Website Last updated 2024-05-28 22:50<br>
+    Authorised access checks.
 </div>
 
     <script src="js/jquery.min.js"></script>

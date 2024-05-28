@@ -23,5 +23,12 @@ class User {
         }
         return false;
     }
+
+    public function getUserById($user_id) {
+        $stmt = $this->db->prepare("SELECT username FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
 }
 ?>

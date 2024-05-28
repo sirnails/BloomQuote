@@ -16,6 +16,7 @@ class UserController {
             die('Invalid CSRF token');
         }
     }
+
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -51,6 +52,10 @@ class UserController {
         } else {
             include_once './app/views/user/login.php';
         }
+    }
+
+    public function getUserInfo($user_id) {
+        return $this->userModel->getUserById($user_id);
     }
 
     public function logout() {

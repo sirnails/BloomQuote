@@ -12,8 +12,9 @@
 </style>
 
 <div id="copyright">
-    Website Last updated 2024-05-28 22:50<br>
-    Authorised access checks.
+    Website Last updated 2024-05-29 00:10<br>
+    Display username in header.
+
 </div>
 
     <script src="js/jquery.min.js"></script>

@@ -28,7 +28,7 @@
 
 <div id="footer">
     <p>Website Last updated 2024-05-29 23:00<br>
-    Click Rows to view quote</p>
+    Better Landing page e.g. background image</p>
 </div>
 
 <script src="js/jquery.min.js"></script>

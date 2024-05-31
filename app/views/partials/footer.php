@@ -9,8 +9,7 @@
         text-align: center;
         background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
         width: 100%;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-	}
+    	}
 
     #footer p {
         color: #000; /* Dark text color */
@@ -32,7 +31,7 @@
 
 <div class="flex-container">
 <div id="footer">Website Last updated 2024-05-29 23:00<br>
-Better Landing page e.g. background image</div>
+Footer removed box shadow</div>
 </div>
 
 

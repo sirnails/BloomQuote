@@ -6,6 +6,28 @@ class Quote {
         $this->db = db_connect();
     }
 
+    public function getNextWeddingGroup($user_id) {
+        $stmt = $this->db->prepare("
+            SELECT * FROM quotes 
+            WHERE user_id = ? AND wedding_date >= CURDATE() 
+            ORDER BY wedding_date ASC
+        ");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $weddings = [];
+        while ($row = $result->fetch_assoc()) {
+            $wedding_date = $row['wedding_date'];
+            if (!isset($weddings[$wedding_date])) {
+                $weddings[$wedding_date] = [];
+            }
+            $weddings[$wedding_date][] = $row;
+        }
+        return $weddings;
+    }
+    
+
     public function create($data) {
         $stmt = $this->db->prepare("INSERT INTO quotes (user_id, wedding_date, billing_address, time, bride_name, bride_email, bride_contact, groom_name, groom_email, groom_contact, ceremony_address, venue_address, other_address, days_for_deposit, deposit_date, final_consultation_month, total_cost, custom_message, payment_terms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("issssssssssssissdss", 

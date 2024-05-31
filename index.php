@@ -49,9 +49,10 @@ try {
 $action = isset($_GET['action']) ? InputHelper::sanitizeString($_GET['action']) : '';
 
 if (isset($_SESSION['user_id'])) { 
-
     $userController = new UserController();
-        $user = $userController->getUserInfo($_SESSION['user_id']);
+    $user = $userController->getUserInfo($_SESSION['user_id']);
+    $quoteModel = new Quote();
+    $upcomingWeddings = $quoteModel->getNextWeddingGroup($_SESSION['user_id']);
 
 /**
  * Handles the various actions that can be performed on quotes, such as creating, editing, and deleting quotes and quote items.

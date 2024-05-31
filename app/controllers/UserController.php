@@ -21,12 +21,19 @@ class UserController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
             $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
-
+    
             $username = $sanitizedData['username'];
             $password = $sanitizedData['password'];
             $email = SanitizationHelper::sanitizeInput($sanitizedData['email']);
             if ($this->userModel->register($username, $password, $email)) {
-                header("Location: index.php?action=login");
+                // Log the user in automatically after successful registration
+                $user = $this->userModel->login($username, $password);
+                if ($user) {
+                    $_SESSION['user_id'] = $user['id'];
+                    header("Location: index.php");
+                } else {
+                    echo "Login after registration failed";
+                }
             } else {
                 echo "Registration failed";
             }
@@ -34,6 +41,7 @@ class UserController {
             include_once './app/views/user/register.php';
         }
     }
+    
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

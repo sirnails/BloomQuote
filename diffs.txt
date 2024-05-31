@@ -1,0 +1,187 @@
+diff --git a/app/controllers/UserController.php b/app/controllers/UserController.php
+index f5334ab..03cdf34 100644
+--- a/app/controllers/UserController.php
++++ b/app/controllers/UserController.php
+@@ -21,12 +21,19 @@ class UserController {
+         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+             $this->checkCSRFToken($_POST['csrf_token']);
+             $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+-
++    
+             $username = $sanitizedData['username'];
+             $password = $sanitizedData['password'];
+             $email = SanitizationHelper::sanitizeInput($sanitizedData['email']);
+             if ($this->userModel->register($username, $password, $email)) {
+-                header("Location: index.php?action=login");
++                // Log the user in automatically after successful registration
++                $user = $this->userModel->login($username, $password);
++                if ($user) {
++                    $_SESSION['user_id'] = $user['id'];
++                    header("Location: index.php");
++                } else {
++                    echo "Login after registration failed";
++                }
+             } else {
+                 echo "Registration failed";
+             }
+@@ -34,6 +41,7 @@ class UserController {
+             include_once './app/views/user/register.php';
+         }
+     }
++    
+ 
+     public function login() {
+         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+diff --git a/app/models/Quote.php b/app/models/Quote.php
+index 0a6baf3..235dea7 100644
+--- a/app/models/Quote.php
++++ b/app/models/Quote.php
+@@ -6,6 +6,28 @@ class Quote {
+         $this->db = db_connect();
+     }
+ 
++    public function getNextWeddingGroup($user_id) {
++        $stmt = $this->db->prepare("
++            SELECT * FROM quotes 
++            WHERE user_id = ? AND wedding_date >= CURDATE() 
++            ORDER BY wedding_date ASC
++        ");
++        $stmt->bind_param("i", $user_id);
++        $stmt->execute();
++        $result = $stmt->get_result();
++        
++        $weddings = [];
++        while ($row = $result->fetch_assoc()) {
++            $wedding_date = $row['wedding_date'];
++            if (!isset($weddings[$wedding_date])) {
++                $weddings[$wedding_date] = [];
++            }
++            $weddings[$wedding_date][] = $row;
++        }
++        return $weddings;
++    }
++    
++
+     public function create($data) {
+         $stmt = $this->db->prepare("INSERT INTO quotes (user_id, wedding_date, billing_address, time, bride_name, bride_email, bride_contact, groom_name, groom_email, groom_contact, ceremony_address, venue_address, other_address, days_for_deposit, deposit_date, final_consultation_month, total_cost, custom_message, payment_terms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         $stmt->bind_param("issssssssssssissdss", 
+diff --git a/app/views/home.php b/app/views/home.php
+index f85f417..8ff3d36 100644
+--- a/app/views/home.php
++++ b/app/views/home.php
+@@ -1,13 +1,34 @@
+ <?php include_once './app/views/partials/navbar.php'; ?>
+ 
+-        <h1>Welcome to BloomQuote!</h1>
+-        <p>Your one-stop solution for managing floral event quotes and details.</p>
+-        <div class="btn-group" role="group" aria-label="Basic example">
+-            <a href="index.php?action=create_quote" class="btn btn-primary">Create New Quote</a>
+-            <a href="index.php?action=view_quotes" class="btn btn-secondary">View Existing Quotes</a>
+-            <a href="index.php?action=logout" class="btn btn-danger">Logout</a>
++<h1>Welcome to BloomQuote!</h1>
++<p>Your one-stop solution for managing floral event quotes and details.</p>
++
++<div class="btn-group" role="group" aria-label="Basic example">
++    <a href="index.php?action=create_quote" class="btn btn-primary">Create New Quote</a>
++    <a href="index.php?action=view_quotes" class="btn btn-secondary">View Existing Quotes</a>
++    <a href="index.php?action=logout" class="btn btn-danger">Logout</a>
++</div>
++
++<?php if (isset($upcomingWeddings) && count($upcomingWeddings) > 0): ?>
++    <?php
++        $displayWeddings = [];
++        foreach ($upcomingWeddings as $date => $weddings) {
++            $displayWeddings = $weddings;
++            break;
++        }
++    ?>
++    <?php foreach ($displayWeddings as $wedding): ?>
++        <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
++            <div class="card-header"><?php echo htmlspecialchars($wedding['wedding_date']); ?></div>
++            <div class="card-body">
++                <h5 class="card-title"><?php echo htmlspecialchars($wedding['bride_name']); ?> & <?php echo htmlspecialchars($wedding['groom_name']); ?></h5>
++                <p class="card-text"><strong>Billing Address:</strong> <?php echo htmlspecialchars($wedding['billing_address']); ?><br><strong>Venue Address:</strong> <?php echo htmlspecialchars($wedding['venue_address']); ?><br><strong>Total Cost:</strong> £<?php echo number_format($wedding['total_cost'], 2); ?></p>
++                <a href="index.php?action=show_quote&id=<?php echo $wedding['id']; ?>" class="btn btn-light">View Quote</a>
++            </div>
+         </div>
+-    </div>
+-    
+-    <?php include_once './app/views/partials/footer.php'; ?>
++    <?php endforeach; ?>
++<?php else: ?>
++    <p>No upcoming weddings found.</p>
++<?php endif; ?>
+ 
++<?php include_once './app/views/partials/footer.php'; ?>
+diff --git a/css/custom.css b/css/custom.css
+index 862f4ea..91ca174 100644
+--- a/css/custom.css
++++ b/css/custom.css
+@@ -8,14 +8,46 @@
+     width: 100%;
+ }
+ 
+-table, p {
++table,
++p {
+     white-space: pre-wrap;
+ }
+-th, td {
++
++th,
++td {
+     padding: 10px;
+     text-align: left;
+     white-space: pre-wrap;
+ }
++
+ .pre-wrap {
+-    white-space: pre-wrap; /* CSS to preserve whitespace and new lines */
++    white-space: pre-wrap;
++    /* CSS to preserve whitespace and new lines */
++}
++
++.card-header,
++.card-body,
++.card-title,
++.card-text {
++    margin: 0;
++    padding: 0;
++    line-height: 1.2;
++}
++
++.card-text p,
++.card-text span {
++    margin: 0;
++    display: block;
++}
++
++.card-text {
++    margin-bottom: 10px;
++}
++
++.card-body {
++    padding: 10px;
++}
++
++.btn-group .btn {
++    margin-right: 5px;
+ }
+\ No newline at end of file
+diff --git a/index.php b/index.php
+index df0c293..c810bdd 100644
+--- a/index.php
++++ b/index.php
+@@ -49,9 +49,10 @@ try {
+ $action = isset($_GET['action']) ? InputHelper::sanitizeString($_GET['action']) : '';
+ 
+ if (isset($_SESSION['user_id'])) { 
+-
+     $userController = new UserController();
+-        $user = $userController->getUserInfo($_SESSION['user_id']);
++    $user = $userController->getUserInfo($_SESSION['user_id']);
++    $quoteModel = new Quote();
++    $upcomingWeddings = $quoteModel->getNextWeddingGroup($_SESSION['user_id']);
+ 
+ /**
+  * Handles the various actions that can be performed on quotes, such as creating, editing, and deleting quotes and quote items.

@@ -8,14 +8,46 @@
     width: 100%;
 }
 
-table, p {
+table,
+p {
     white-space: pre-wrap;
 }
-th, td {
+
+th,
+td {
     padding: 10px;
     text-align: left;
     white-space: pre-wrap;
 }
+
 .pre-wrap {
-    white-space: pre-wrap; /* CSS to preserve whitespace and new lines */
+    white-space: pre-wrap;
+    /* CSS to preserve whitespace and new lines */
+}
+
+.card-header,
+.card-body,
+.card-title,
+.card-text {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.card-text p,
+.card-text span {
+    margin: 0;
+    display: block;
+}
+
+.card-text {
+    margin-bottom: 10px;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+.btn-group .btn {
+    margin-right: 5px;
 }

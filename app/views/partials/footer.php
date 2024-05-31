@@ -3,14 +3,12 @@
 <style>
     #footer {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
         position: relative;
         text-align: center;
         background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
         width: 100%;
-        bottom: 0;
-        padding: 10px 0; /* Adds 10px margin above and below the text */
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 	}
 
@@ -21,15 +19,23 @@
     body.dark-mode #footer {
         background-color: rgba(25, 25, 25, 0.9); /* Semi-transparent background */
     }
+
     body.dark-mode #footer p {
         color: #fff; /* Light text color */
     }
+    .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 </style>
 
-<div id="footer">
-    <p>Website Last updated 2024-05-29 23:00<br>
-    Better Landing page e.g. background image</p>
+<div class="flex-container">
+<div id="footer">Website Last updated 2024-05-29 23:00<br>
+Better Landing page e.g. background image</div>
 </div>
+
+
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>

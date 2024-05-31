@@ -250,7 +250,7 @@ class QuoteController {
     }
     
     public function deleteAllQuoteItems(){
-        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        $quote_id = InputHelper::sanitizeInt($_GET['id']);
         if ($quote_id === false) {
             die('Invalid quote ID');
         }
@@ -260,7 +260,7 @@ class QuoteController {
     }
 
     public function deleteQuote(){
-        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        $quote_id = InputHelper::sanitizeInt($_GET['id']);
         if ($quote_id === false) {
             die('Invalid quote ID');
         }
@@ -270,6 +270,23 @@ class QuoteController {
         $this->quoteModel->deleteQuote($quote_id);
         header("Location: index.php?action=view_quotes");
     }
+
+    public function search_quotes() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_term'])) {
+                $search_term = InputHelper::sanitizeString($_GET['search_term']);
+                $user_id = $_SESSION['user_id'];
+                $quotes = $this->quoteModel->searchQuotesByUserId($user_id, $search_term);
+                include_once './app/views/quote/list_quotes.php';
+            } else {
+                header("Location: index.php?action=view_quotes");
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            header("Location: index.php?action=view_quotes");
+        }
+    }
+    
 }
 
 ?>

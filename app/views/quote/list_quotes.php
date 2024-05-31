@@ -2,6 +2,18 @@
 
 <h1>Your Quotes</h1>
 <a href="index.php?action=create_quote" class="btn btn-primary mb-3">Create New Quote</a>
+<form method="GET" action="index.php">
+    <input type="hidden" name="action" value="search_quotes">
+    <div class="input-group mb-3">
+        <input type="text" name="search_term" placeholder="Search quotes" class="form-control" required>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary ml-2">Search</button>
+        </div>
+    </div>
+</form>
+
+
+<br>
 <table class="table table-striped">
     <thead>
         <tr>

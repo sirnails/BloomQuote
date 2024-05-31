@@ -105,5 +105,48 @@ class Quote {
         $stmt->bind_param("i", $quote_id);
         return $stmt->execute();
     }
+
+    public function searchQuotesByUserId($user_id, $search_term) {
+        $like_search_term = '%' . $search_term . '%';
+        $query = "
+            SELECT * FROM quotes 
+            WHERE user_id = ? AND (
+                bride_name LIKE ? OR 
+                groom_name LIKE ? OR 
+                wedding_date LIKE ? OR 
+                billing_address LIKE ? OR 
+                time LIKE ? OR 
+                bride_email LIKE ? OR 
+                bride_contact LIKE ? OR 
+                groom_email LIKE ? OR 
+                groom_contact LIKE ? OR 
+                ceremony_address LIKE ? OR 
+                venue_address LIKE ? OR 
+                other_address LIKE ? OR 
+                custom_message LIKE ? OR 
+                payment_terms LIKE ?
+            )
+        ";
+        
+        if ($stmt = $this->db->prepare($query)) {
+            $stmt->bind_param("issssssssssssss", 
+                $user_id, $like_search_term, $like_search_term, $like_search_term, 
+                $like_search_term, $like_search_term, $like_search_term, $like_search_term, 
+                $like_search_term, $like_search_term, $like_search_term, $like_search_term, 
+                $like_search_term, $like_search_term, $like_search_term
+            );
+            
+            if ($stmt->execute()) {
+                return $stmt->get_result();
+            } else {
+                error_log("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+                throw new Exception("Database execute failed");
+            }
+        } else {
+            error_log("Prepare failed: (" . $this->db->errno . ") " . $this->db->error);
+            throw new Exception("Database prepare failed");
+        }
+    }
+    
 }
 ?>

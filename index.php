@@ -108,6 +108,10 @@ switch ($action) {
         $controller->deleteAllQuoteItems();
         $controller->deleteQuote();
         break;
+    case 'search_quotes':
+        $controller = new QuoteController();
+        $controller->search_quotes();
+        break;
     default:
         include_once './app/views/home.php';
         break;

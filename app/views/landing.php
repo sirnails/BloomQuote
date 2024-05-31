@@ -68,7 +68,6 @@
         background-color: #5a6268;
     }
 </style>
-
 <div class="circle-container">
     <div class="circle">
         <h1>Welcome <br>to BloomQuote!</h1>
@@ -77,5 +76,4 @@
         <a href="index.php?action=register" class="btn btn-secondary">Register</a>
     </div>
 </div>
-
 <?php include_once './app/views/partials/footer.php'; ?>

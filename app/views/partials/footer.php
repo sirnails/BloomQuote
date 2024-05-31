@@ -1,5 +1,4 @@
 </div>
-
 <style>
     #footer {
         display: flex;
@@ -28,14 +27,10 @@
             align-items: center;
         }
 </style>
-
 <div class="flex-container">
 <div id="footer">Website Last updated 2024-05-29 23:00<br>
-Footer removed box shadow</div>
+Footer removed white space from code</div>
 </div>
-
-
-
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 </body>

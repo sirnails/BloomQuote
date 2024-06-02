@@ -112,6 +112,18 @@ switch ($action) {
         $controller = new QuoteController();
         $controller->search_quotes();
         break;
+    case 'record_payment':
+        $controller = new QuoteController();
+        $controller->record_payment();
+        break;
+    case 'view_receipt':
+        $controller = new QuoteController();
+        $controller->view_receipt(InputHelper::sanitizeInt($_GET['id']));
+        break;
+    case 'initial_payment_input':
+        $controller = new QuoteController();
+        $controller->initial_payment_input();
+        break;
     default:
         include_once './app/views/home.php';
         break;

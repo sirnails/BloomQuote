@@ -286,6 +286,106 @@ class QuoteController {
             header("Location: index.php?action=view_quotes");
         }
     }
+    public function record_payment() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
+    
+            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $stage = isset($sanitizedData['stage']) ? $sanitizedData['stage'] : 'initial'; // Default to 'initial' if stage is not set
+    
+            if ($stage == 'initial') {
+                // Handle initial payment input
+                $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+                $quote = $this->authorizeUser($quote_id); // Check authorization
+    
+                $amount_paid = floatval($sanitizedData['amount_paid']);
+                $total_cost = floatval($quote['total_cost']);
+    
+                // Create new quote item for the payment
+                $description = 'Payment';
+                $delivery_location = 'Billing Address';
+                $cost_per_item = -abs($amount_paid); // Ensure negative amount
+                $quantity = 1;
+                $total_cost = $cost_per_item * $quantity;
+    
+                // Determine the next order value
+                $next_order = $this->quoteItemModel->getNextOrderValue($quote_id);
+    
+                $quote_item_id = $this->quoteItemModel->create($quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $next_order);
+    
+                $message = "Created quote_item_id: $quote_item_id";
+                $logFile = 'payment_log.txt';
+                file_put_contents($logFile, $message . PHP_EOL, FILE_APPEND);
+
+
+                // Calculate outstanding balance
+                $outstanding_balance = $quote['total_cost'] + $total_cost;
+    
+                // Get the final consultation month
+                $final_consultation_month = $quote['final_consultation_month'];
+                $due_date = date('Y-m-01', strtotime($final_consultation_month));
+                $consultation_date = $due_date;
+                $thank_you_message = 'Thanks for your payment';
+    
+                // Insert payment record
+                $payment_id = $this->quoteItemModel->createPayment($quote_item_id, $amount_paid, $outstanding_balance, $due_date, $consultation_date, $thank_you_message);
+    
+                // Update quote item to mark as payment
+                $this->quoteItemModel->markAsPayment($quote_item_id, $payment_id);
+    
+                // Update the total cost of the quote
+                $this->quoteModel->updateTotalCost($quote_id, $outstanding_balance);
+    
+                header("Location: index.php?action=record_payment&quote_id=" . $quote_id . "&quote_item_id=" . $quote_item_id . "&amount_paid=" . $amount_paid . "&outstanding_balance=" . $outstanding_balance . "&due_date=" . $due_date . "&consultation_date=" . $consultation_date . "&thank_you_message=" . urlencode($thank_you_message));
+            } else if ($stage == 'final') {
+                // Handle final payment recording
+                $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
+                $quote_item_id = InputHelper::sanitizeInt($sanitizedData['quote_item_id']);
+                $amount_paid = floatval($sanitizedData['amount_paid']);
+                $outstanding_balance = floatval($sanitizedData['outstanding_balance']);
+                $due_date = $sanitizedData['due_date'];
+                $consultation_date = $sanitizedData['consultation_date'];
+                $thank_you_message = SanitizationHelper::sanitizeInput($sanitizedData['thank_you_message']);
+    
+                // Redirect to the quote page after recording the payment
+                header("Location: index.php?action=show_quote&id=" . $quote_id);
+            }
+        } else {
+            $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+            if ($quote_id === false) {
+                die('Invalid quote ID');
+            }
+            $quote = $this->authorizeUser($quote_id); // Check authorization
+            $quote_item_id = InputHelper::sanitizeInt($_GET['quote_item_id']);
+            $amount_paid = floatval($_GET['amount_paid']);
+            $outstanding_balance = floatval($_GET['outstanding_balance']);
+            $due_date = $_GET['due_date'];
+            $consultation_date = $_GET['consultation_date'];
+            $thank_you_message = $_GET['thank_you_message'];
+    
+            include_once './app/views/quote/record_payment.php';
+        }
+    }
+    
+    
+    public function view_receipt($payment_id) {
+        $payment_id = InputHelper::sanitizeInt($payment_id);
+        if ($payment_id === false) {
+            die('Invalid payment ID');
+        }
+        $payment = $this->quoteItemModel->getPaymentById($payment_id);
+        include_once './app/views/quote/view_receipt.php';
+    }
+
+    public function initial_payment_input() {
+        $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
+        if ($quote_id === false) {
+            die('Invalid quote ID');
+        }
+        $quote = $this->authorizeUser($quote_id); // Check authorization
+        include_once './app/views/quote/initial_payment_input.php';
+    }
+    
     
 }
 

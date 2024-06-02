@@ -1,4 +1,5 @@
 <?php include_once './app/views/partials/navbar.php'; ?>
+<a href="index.php?action=initial_payment_input&quote_id=<?php echo $quote['id']; ?>" class="btn btn-success mb-3">Record Payment</a>
 <a href="index.php?action=delete_quote&id=<?php echo $quote['id']; ?>" style="float: right;" onclick="return confirm('Are you sure you want to delete this quote forever?');" class="btn btn-danger mb-3">Delete</a>
 <a href="index.php?action=edit_quote&id=<?php echo $quote['id']; ?>" class="btn btn-primary mb-3">Edit Quote Header</a>
 <a href="index.php?action=print_quote&id=<?php echo $quote['id']; ?>" class="btn btn-success mb-3">Print Quote</a>
@@ -53,11 +54,14 @@
                 <td>£<?php echo number_format($item['total_cost'], 2); ?></td>
                 <td>
                     <div class="button-grid">
-                        <a href="index.php?action=move_item_up&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-secondary">&#x2191;</a>
-                        <a href="index.php?action=edit_item&item_id=<?php echo $item['id']; ?>" class="btn btn-info">Edit</a>
-                        <a href="index.php?action=move_item_down&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-secondary">&#x2193;</a>
-                        <a href="index.php?action=delete_item&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">&#x1F5D1;</a>
+                            <a href="index.php?action=move_item_up&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-secondary">&#x2191;</a>
+                            <a href="index.php?action=edit_item&item_id=<?php echo $item['id']; ?>" class="btn btn-info">Edit</a>
+                            <a href="index.php?action=move_item_down&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-secondary">&#x2193;</a>
+                            <a href="index.php?action=delete_item&item_id=<?php echo $item['id']; ?>&quote_id=<?php echo $quote['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">&#x1F5D1;</a>
                     </div>
+                <?php if ($item['is_payment']): ?>
+                    <a href="index.php?action=view_receipt&id=<?php echo $item['is_payment']; ?>" class="btn btn-info">View Receipt</a>
+                <?php endif; ?>
                 </td>
             </tr>
         <?php } ?>

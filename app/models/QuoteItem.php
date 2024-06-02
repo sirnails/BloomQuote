@@ -5,13 +5,34 @@ class QuoteItem {
     public function __construct() {
         $this->db = db_connect();
     }
-
-    public function create($quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $order) {
+    public function create(
+        $quote_id,
+        $description,
+        $delivery_location,
+        $cost_per_item,
+        $quantity,
+        $total_cost,
+        $order
+    ) {
         $stmt = $this->db->prepare("INSERT INTO quote_items (quote_id, description, delivery_location, cost_per_item, quantity, total_cost, `order`) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("issdidi", $quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $order);
-        return $stmt->execute();
+        $stmt->bind_param(
+            "issdidi",
+            $quote_id,
+            $description,
+            $delivery_location,
+            $cost_per_item,
+            $quantity,
+            $total_cost,
+            $order
+        );
+        $stmt->execute();
+        
+        if ($stmt->affected_rows > 0) {
+            return $stmt->insert_id; // Return the ID of the newly inserted quote item
+        } else {
+            return false; // Handle error appropriately
+        }
     }
-
     public function getNextOrderValue($quote_id) {
         $stmt = $this->db->prepare("SELECT MAX(`order`) as max_order FROM quote_items WHERE quote_id = ?");
         $stmt->bind_param("i", $quote_id);
@@ -19,27 +40,23 @@ class QuoteItem {
         $result = $stmt->get_result()->fetch_assoc();
         return $result['max_order'] + 1;
     }
-
     public function getItemsByQuoteId($quote_id) {
         $stmt = $this->db->prepare("SELECT * FROM quote_items WHERE quote_id = ? ORDER BY `order` ASC");
         $stmt->bind_param("i", $quote_id);
         $stmt->execute();
         return $stmt->get_result();
     }
-
     public function getItemById($item_id) {
         $stmt = $this->db->prepare("SELECT * FROM quote_items WHERE id = ?");
         $stmt->bind_param("i", $item_id);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
-
     public function update($item_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost) {
         $stmt = $this->db->prepare("UPDATE quote_items SET description = ?, delivery_location = ?, cost_per_item = ?, quantity = ?, total_cost = ? WHERE id = ?");
         $stmt->bind_param("ssdidd", $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $item_id);
         return $stmt->execute();
     }
-
     public function moveItemUp($item_id) {
         $current_item = $this->getItemById($item_id);
         $current_order = $current_item['order'];
@@ -63,7 +80,6 @@ class QuoteItem {
             $stmt->execute();
         }
     }
-    
     public function moveItemDown($item_id) {
         $current_item = $this->getItemById($item_id);
         $current_order = $current_item['order'];
@@ -87,13 +103,11 @@ class QuoteItem {
             $stmt->execute();
         }
     }
-    
     public function delete($item_id) {
         $stmt = $this->db->prepare("DELETE FROM quote_items WHERE id = ?");
         $stmt->bind_param("i", $item_id);
         return $stmt->execute();
     }
-    
     public function reorderItems($quote_id) {
         $stmt = $this->db->prepare("SELECT id FROM quote_items WHERE quote_id = ? ORDER BY `order` ASC");
         $stmt->bind_param("i", $quote_id);
@@ -107,13 +121,29 @@ class QuoteItem {
             $order++;
         }
     }
-    
     public function deleteAllQuoteItems($quote_id) {
         $stmt = $this->db->prepare("DELETE FROM quote_items WHERE quote_id = ?");
         $stmt->bind_param("i", $quote_id);
         $stmt->execute();
         return $stmt->get_result();
     }
-
+    public function createPayment($quote_item_id, $amount_paid, $outstanding_balance, $due_date, $consultation_date, $thank_you_message) {
+        $stmt = $this->db->prepare("INSERT INTO payments (quote_item_id, amount_paid, outstanding_balance, due_date, consultation_date, thank_you_message) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("idddss", $quote_item_id, $amount_paid, $outstanding_balance, $due_date, $consultation_date, $thank_you_message);
+        $stmt->execute();
+        return $this->db->insert_id; // Ensure this returns the correct inserted ID
+    }
+    public function markAsPayment($quote_item_id, $payment_id) {
+        $stmt = $this->db->prepare("UPDATE quote_items SET is_payment = ? WHERE id = ?");
+        $stmt->bind_param("ii", $payment_id, $quote_item_id);
+        $stmt->execute();
+    }
+    public function getPaymentById($payment_id) {
+        $stmt = $this->db->prepare("SELECT * FROM payments WHERE id = ?");
+        $stmt->bind_param("i", $payment_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+    
 }
 ?>

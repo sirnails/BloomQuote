@@ -1,9 +1,13 @@
 <?php
+namespace App\Models;
+
+require_once './config/database.php';
+
 class QuoteItem {
     private $db;
 
     public function __construct() {
-        $this->db = db_connect();
+        $this->db = \db_connect();
     }
     public function create(
         $quote_id,

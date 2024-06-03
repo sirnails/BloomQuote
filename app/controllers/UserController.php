@@ -1,8 +1,12 @@
 <?php
 
-require_once './app/models/User.php';
-require_once './app/helpers/SanitizationHelper.php';
-require_once './app/helpers/InputHelper.php';
+namespace App\Controllers;
+
+use App\Models;
+use App\Models\User;
+use App\Helpers\SanitizationHelper;
+use App\Helpers\InputHelper;
+
 
 class UserController {
     private $userModel;
@@ -31,11 +35,14 @@ class UserController {
                 if ($user) {
                     $_SESSION['user_id'] = $user['id'];
                     header("Location: index.php");
+                    http_response_code(200);
                 } else {
                     echo "Login after registration failed";
+                    http_response_code(500); 
                 }
             } else {
                 echo "Registration failed";
+                http_response_code(500); 
             }
         } else {
             include_once './app/views/user/register.php';

@@ -1,9 +1,11 @@
 <?php
 
-require_once './app/models/Quote.php';
-require_once './app/models/QuoteItem.php';
-require_once './app/helpers/SanitizationHelper.php';
-require_once './app/helpers/InputHelper.php';
+namespace App\Controllers;
+
+use App\Models\Quote;
+use App\Models\QuoteItem;
+use App\Helpers\SanitizationHelper;
+use App\Helpers\InputHelper;
 
 class QuoteController {
     private $quoteModel;
@@ -19,7 +21,9 @@ class QuoteController {
             die('Invalid CSRF token');
         }
     }
-
+    public function getLastInsertedQuoteId() {
+        return $this->quoteModel->getLastInsertedId();
+    }
     private function authorizeUser($quote_id) {
         $quote = $this->quoteModel->getQuoteById($quote_id);
         if ($quote['user_id'] !== $_SESSION['user_id']) {
@@ -58,6 +62,7 @@ class QuoteController {
             ];
             $this->quoteModel->create($data);
             header("Location: index.php?action=show_quote&id=" . $this->quoteModel->getLastInsertedId());
+            //http_response_code(200);
         } else {
             include_once './app/views/quote/create.php';
         }

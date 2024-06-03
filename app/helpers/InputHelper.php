@@ -1,4 +1,5 @@
 <?php
+namespace App\Helpers;
 
 class InputHelper {
     public static function sanitizeInt($data) {
@@ -12,7 +13,6 @@ class InputHelper {
     public static function sanitizeEmail($data) {
         return filter_var($data, FILTER_VALIDATE_EMAIL);
     }
-
 }
 
 ?>

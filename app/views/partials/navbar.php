@@ -1,3 +1,7 @@
+<?php
+use App\Controllers\UserController;
+
+?>
 <!DOCTYPE html>
 <html>
 

@@ -1,4 +1,16 @@
 <?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config/database.php'; // Include database configuration
+
+use App\Models\Quote;
+use App\Models\QuoteItem;
+use App\Models\User;
+use App\Helpers\SanitizationHelper;
+use App\Helpers\InputHelper;
+use App\Controllers\UserController;
+use App\Controllers\QuoteController;
+
 ob_start(); // Start output buffering
 
 /** 
@@ -8,11 +20,11 @@ ob_start(); // Start output buffering
 * If the user is logged in (i.e. a user_id is set in the session), the code will continue executing.
 */
  
-set_exception_handler(function ($e) {
-    error_log($e->getMessage());
-    http_response_code(500);
-    echo "An unexpected error occurred. Please try again later.";
-});
+// set_exception_handler(function ($e) {
+//     error_log($e->getMessage());
+//     http_response_code(500);
+//     echo "An unexpected error occurred. Please try again later.";
+// });
 
 
 error_reporting(E_ALL);
@@ -38,10 +50,10 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 try {
-    require_once './config/database.php';
-    require_once './app/controllers/UserController.php';
-    require_once './app/controllers/QuoteController.php';
-    require_once './app/helpers/InputHelper.php';
+//       require_once './config/database.php';
+//       require_once './app/controllers/UserController.php';
+//       require_once './app/controllers/QuoteController.php';
+//   require_once './app/helpers/InputHelper.php';
 } catch (Exception $e) {
     echo 'Error: ',  $e->getMessage(), "\n";
 }

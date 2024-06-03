@@ -1,2 +1,7 @@
-credentials.php
 database.php
+
+# composer generated files
+/vendor/
+/.phpunit.cache/
+.phpunit.result.cache
+*.bak

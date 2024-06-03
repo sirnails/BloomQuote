@@ -147,6 +147,19 @@ class Quote {
             throw new Exception("Database prepare failed");
         }
     }
+    public function recalculateTotalCost($quote_id) {
+        $stmt = $this->db->prepare("SELECT SUM(total_cost) as total FROM quote_items WHERE quote_id = ?");
+        $stmt->bind_param("i", $quote_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $total_cost = $result['total'];
+    
+        $stmt = $this->db->prepare("UPDATE quotes SET total_cost = ? WHERE id = ?");
+        $stmt->bind_param("di", $total_cost, $quote_id);
+        $stmt->execute();
+    
+        return $total_cost;
+    }
     
 }
 ?>

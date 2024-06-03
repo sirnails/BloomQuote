@@ -62,7 +62,6 @@ class QuoteController {
             include_once './app/views/quote/create.php';
         }
     }
-
     public function add_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -102,7 +101,6 @@ class QuoteController {
             include_once './app/views/quote/add_item.php';
         }
     }
-
     public function edit_item() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -145,27 +143,40 @@ class QuoteController {
             include_once './app/views/quote/edit_item.php';
         }
     }
-
     public function delete_item() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
         $quote = $this->authorizeUser($quote_id); // Check authorization
-
+    
         if ($item_id === false || $quote_id === false) {
             die('Invalid item or quote ID');
         }
-
+    
+        // Get the total cost of the item being deleted
+        $item = $this->quoteItemModel->getItemById($item_id);
+        $item_total_cost = $item['total_cost'];
+    
+        // Delete the item
         $this->quoteItemModel->delete($item_id);
         $this->quoteItemModel->reorderItems($quote_id);
+    
+        // Recalculate the total cost of the quote
+        $quote = $this->quoteModel->getQuoteById($quote_id);
+        $new_total_cost = $quote['total_cost'] - $item_total_cost;
+        $this->quoteModel->updateTotalCost($quote_id, $new_total_cost);
+    
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
-    
     public function show($id) {
         $id = InputHelper::sanitizeInt($id);
         if ($id === false) {
             die('Invalid quote ID');
         }
         $quote = $this->authorizeUser($id); // Check authorization
+
+        // Recalculate the total cost before displaying the quote
+        $this->quoteModel->recalculateTotalCost($id);
+
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/show.php';
     }
@@ -244,7 +255,15 @@ class QuoteController {
     }
     
     public function print($id) {
+        $id = InputHelper::sanitizeInt($id);
+        if ($id === false) {
+            die('Invalid quote ID');
+        }
         $quote = $this->authorizeUser($id); // Check authorization
+
+        // Recalculate the total cost before printing the quote
+        $this->quoteModel->recalculateTotalCost($id);
+        
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/print.php';
     }
@@ -313,11 +332,6 @@ class QuoteController {
     
                 $quote_item_id = $this->quoteItemModel->create($quote_id, $description, $delivery_location, $cost_per_item, $quantity, $total_cost, $next_order);
     
-                $message = "Created quote_item_id: $quote_item_id";
-                $logFile = 'payment_log.txt';
-                file_put_contents($logFile, $message . PHP_EOL, FILE_APPEND);
-
-
                 // Calculate outstanding balance
                 $outstanding_balance = $quote['total_cost'] + $total_cost;
     
@@ -366,6 +380,7 @@ class QuoteController {
             include_once './app/views/quote/record_payment.php';
         }
     }
+    
     
     
     public function view_receipt($payment_id) {

@@ -1,20 +1,20 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
+        'name' => 'dave/bloomquote',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '381db49cacfaeb24fb24629040192c87b43bc8f8',
-        'type' => 'library',
+        'reference' => 'cb1498c581a1ee87fb0217e65af1771c807b0ce2',
+        'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
+        'dave/bloomquote' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '381db49cacfaeb24fb24629040192c87b43bc8f8',
-            'type' => 'library',
+            'reference' => 'cb1498c581a1ee87fb0217e65af1771c807b0ce2',
+            'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,

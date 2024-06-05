@@ -4,13 +4,18 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use App\Controllers\UserController;
-use App\Models\User;
+
 
 require_once './config/database.php';
 
 class UserControllerTest extends TestCase
 {
     protected $userController;
+
+    public function testTrueIsTrue()
+    {
+        $this->assertTrue(true, 'True is not true');
+    }
 
     protected function setUp(): void
     {
@@ -39,6 +44,28 @@ class UserControllerTest extends TestCase
         ob_end_clean(); // Clean the output buffer
 
         $this->assertEquals(200, http_response_code());
+
+        // Check if the user is in the database
+        $db = db_connect();
+        $stmt = $db->prepare("SELECT id, username, email FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $username = 'testuser';
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($id, $retrievedUsername, $retrievedEmail);
+
+        // Verify that one record was found
+        $this->assertEquals(1, $stmt->num_rows, 'Expected one user to be found in the database.');
+
+        // Fetch the result and verify the details
+        if ($stmt->num_rows === 1) {
+            $stmt->fetch();
+            $this->assertEquals('testuser', $retrievedUsername);
+            $this->assertEquals('testuser@example.com', $retrievedEmail);
+        }
+
+        $stmt->close();
+        $db->close();
     }
 
     private function deleteTestUser()

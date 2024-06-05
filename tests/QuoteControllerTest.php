@@ -11,6 +11,11 @@ class QuoteControllerTest extends TestCase
     protected $quoteController;
     protected $lastInsertedId;
 
+    public function testTrueIsTrue()
+    {
+        $this->assertTrue(true, 'True is not true');
+    }
+
     protected function setUp(): void
     {
         $this->quoteController = new QuoteController();

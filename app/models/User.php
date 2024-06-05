@@ -1,18 +1,6 @@
 <?php
 namespace App\Models;
 
-try {
-    // require_once './config/database.php';
-    // require_once './app/controllers/UserController.php';
-    // require_once './app/controllers/QuoteController.php';
-    // require_once './app/helpers/InputHelper.php';
-    // require_once './app/models/User.php'; // Add this line
-    // require_once './app/models/Quote.php'; // If not already included
-    // require_once './app/models/QuoteItem.php'; // If not already included
-} catch (Exception $e) {
-    echo 'Error: ',  $e->getMessage(), "\n";
-}
-
 class User {
     private $db;
 

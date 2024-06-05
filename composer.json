@@ -1,4 +1,9 @@
 {
+    "name": "dave/bloomquote",
+    "description": "A wedding quotation management app for a florist.",
+    "type": "project",
+    "license": "None",
+    "require": {},
     "autoload": {
         "psr-4": {
             "App\\": "app/"

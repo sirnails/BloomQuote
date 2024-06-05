@@ -33,8 +33,8 @@
         }
 </style>
 <div class="flex-container">
-<div id="footer">Website Last updated 2024-05-29 23:00<br>
-Set Margins to 0</div>
+<div id="footer">Website Last updated 2024-06-06 00:07<br>
+Added tests</div>
 </div>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>

@@ -1,23 +1,28 @@
-call composer install
+@echo off
+setlocal
 
-pause
+call composer install
 
 call composer dump -o
 
-pause 
-
 call ./vendor/bin/phpunit --list-tests
-
-pause
 
 call ./vendor/bin/phpunit --testdox
 
-REM vendor/bin/phpunit
+:ask
+echo Do you want to remove Composer dev tools ready for production? (Y/N)
+set /p choice=
 
-pause
+if /i "%choice%"=="Y" goto :remove
+goto :exit
 
+:remove
+echo Removing Composer dev tools...
 call composer install --no-dev --optimize-autoloader --classmap-authoritative
+goto :end
 
-pause
+:exit
+echo No changes have been made.
 
+:end
 call composer dump -o

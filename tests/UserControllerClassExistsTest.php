@@ -7,12 +7,6 @@ use App\Controllers\UserController;
 
 class UserControllerClassExistsTest extends TestCase
 {
-
-    public function testTrueIsTrue()
-    {
-        $this->assertTrue(true, 'True is not true');
-    }
-
     public function testUserControllerClassExists()
     {
         // Ensure the class exists

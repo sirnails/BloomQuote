@@ -24,7 +24,6 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         'App\\Controllers\\QuoteController' => __DIR__ . '/../..' . '/app/Controllers/QuoteController.php',
         'App\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Controllers/UserController.php',
         'App\\Helpers\\InputHelper' => __DIR__ . '/../..' . '/app/Helpers/InputHelper.php',
-        'App\\Helpers\\SanitizationHelper' => __DIR__ . '/../..' . '/app/Helpers/SanitizationHelper.php',
         'App\\Models\\Quote' => __DIR__ . '/../..' . '/app/Models/Quote.php',
         'App\\Models\\QuoteItem' => __DIR__ . '/../..' . '/app/Models/QuoteItem.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',

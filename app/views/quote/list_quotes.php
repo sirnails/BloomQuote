@@ -45,16 +45,6 @@
         transition: filter 0.2s;
     }
 
-    /* .clickable-row:hover {
-        filter: brightness(50%);
-    }
-    body.dark-mode .clickable-row:hover {
-        filter: brightness(150%);
-    }
-    body:not(.dark-mode) .clickable-row:hover {
-        filter: brightness(50%);
-    } */
-
     .table-striped tbody tr:nth-of-type(odd):hover {
         background-color: #C0C0C0;
     }

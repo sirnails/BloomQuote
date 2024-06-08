@@ -11,11 +11,6 @@ class QuoteControllerTest extends TestCase
     protected $quoteController;
     protected $lastInsertedId;
 
-    public function testTrueIsTrue()
-    {
-        $this->assertTrue(true, 'True is not true');
-    }
-
     protected function setUp(): void
     {
         $this->quoteController = new QuoteController();
@@ -80,5 +75,90 @@ class QuoteControllerTest extends TestCase
             $db->close();
         }
     }
+
+    public function testAddItemToQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testEditItemInQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testDeleteItemFromQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testShowQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testListQuotes()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testEditQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testMoveItemUp()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testMoveItemDown()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testPrintQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testDeleteQuote()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testSearchQuotes()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testRecordPayment()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testViewReceipt()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
+    public function testInitialPaymentInput()
+    {
+        // Placeholder test
+        $this->markTestIncomplete();
+    }
+
 }
 ?>

@@ -6,7 +6,6 @@ require_once __DIR__ . '/config/database.php'; // Include database configuration
 use App\Models\Quote;
 use App\Models\QuoteItem;
 use App\Models\User;
-use App\Helpers\SanitizationHelper;
 use App\Helpers\InputHelper;
 use App\Controllers\UserController;
 use App\Controllers\QuoteController;

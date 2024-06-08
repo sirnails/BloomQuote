@@ -4,9 +4,7 @@ namespace App\Controllers;
 
 use App\Models;
 use App\Models\User;
-use App\Helpers\SanitizationHelper;
 use App\Helpers\InputHelper;
-
 
 class UserController {
     private $userModel;
@@ -20,22 +18,32 @@ class UserController {
             die('Invalid CSRF token');
         }
     }
-
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
     
             $username = $sanitizedData['username'];
             $password = $sanitizedData['password'];
-            $email = SanitizationHelper::sanitizeInput($sanitizedData['email']);
+            $email = InputHelper::sanitizeEmail($sanitizedData['email']);
+    
+            if (!$email) {
+                echo "Invalid email address. Please provide a valid email.";
+                http_response_code(400); // Bad Request
+                //include_once './app/views/user/register.php';
+                return;
+            }
+    
             if ($this->userModel->register($username, $password, $email)) {
                 // Log the user in automatically after successful registration
                 $user = $this->userModel->login($username, $password);
                 if ($user) {
+                    //TODO: after registration, redirect to the view_quotes page
+                    // at the moment, it goes to a blank screen, no idea why!
                     $_SESSION['user_id'] = $user['id'];
-                    header("Location: index.php");
+                    header("Location: index.php?action=view_quotes");
                     http_response_code(200);
+                    exit; // Ensure script stops after header redirection
                 } else {
                     echo "Login after registration failed";
                     http_response_code(500); 
@@ -53,15 +61,16 @@ class UserController {
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
 
-            $username = SanitizationHelper::sanitizeInput($sanitizedData['username']);
-            $password = SanitizationHelper::sanitizeInput($sanitizedData['password']);
+            $username = InputHelper::sanitizeString($sanitizedData['username']);
+            $password = InputHelper::sanitizeString($sanitizedData['password']);
             $user = $this->userModel->login($username, $password);
             if ($user) {
                 $_SESSION['user_id'] = $user['id'];
                 header("Location: index.php");
             } else {
+                //TODO: Email reminder for forgotten password
                 echo "Invalid credentials";
             }
         } else {

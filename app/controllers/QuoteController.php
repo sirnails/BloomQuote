@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Models\Quote;
 use App\Models\QuoteItem;
-use App\Helpers\SanitizationHelper;
 use App\Helpers\InputHelper;
 
 class QuoteController {
@@ -37,7 +36,7 @@ class QuoteController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
             
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
             
             $data = [
                 'user_id' => $_SESSION['user_id'],
@@ -71,13 +70,13 @@ class QuoteController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
             
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
 
             $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
             $quote = $this->authorizeUser($quote_id); // Check authorization
 
-            $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
-            $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
+            $description = InputHelper::sanitizeString($sanitizedData['description']);
+            $delivery_location = InputHelper::sanitizeString($sanitizedData['delivery_location']);
             $cost_per_item = floatval($sanitizedData['cost_per_item']);
             $quantity = intval($sanitizedData['quantity']);
             $total_cost = $cost_per_item * $quantity;
@@ -110,14 +109,14 @@ class QuoteController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
             
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
 
             $item_id = InputHelper::sanitizeInt($sanitizedData['item_id']);
             $quote_id = InputHelper::sanitizeInt($sanitizedData['quote_id']);
             $quote = $this->authorizeUser($quote_id); // Check authorization
 
-            $description = SanitizationHelper::sanitizeInput($sanitizedData['description']);
-            $delivery_location = SanitizationHelper::sanitizeInput($sanitizedData['delivery_location']);
+            $description = InputHelper::sanitizeString($sanitizedData['description']);
+            $delivery_location = InputHelper::sanitizeString($sanitizedData['delivery_location']);
             $cost_per_item = floatval($sanitizedData['cost_per_item']);
             $quantity = intval($sanitizedData['quantity']);
             $total_cost = $cost_per_item * $quantity;
@@ -196,7 +195,7 @@ class QuoteController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
             
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
 
             $id = InputHelper::sanitizeInt($sanitizedData['id']);
             if ($id === false) {
@@ -314,7 +313,7 @@ class QuoteController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
     
-            $sanitizedData = SanitizationHelper::sanitizeArray($_POST);
+            $sanitizedData = InputHelper::sanitizeArray($_POST);
             $stage = isset($sanitizedData['stage']) ? $sanitizedData['stage'] : 'initial'; // Default to 'initial' if stage is not set
     
             if ($stage == 'initial') {
@@ -364,7 +363,7 @@ class QuoteController {
                 $outstanding_balance = floatval($sanitizedData['outstanding_balance']);
                 $due_date = $sanitizedData['due_date'];
                 $consultation_date = $sanitizedData['consultation_date'];
-                $thank_you_message = SanitizationHelper::sanitizeInput($sanitizedData['thank_you_message']);
+                $thank_you_message = InputHelper::sanitizeString($sanitizedData['thank_you_message']);
     
                 // Redirect to the quote page after recording the payment
                 header("Location: index.php?action=show_quote&id=" . $quote_id);

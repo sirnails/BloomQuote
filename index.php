@@ -108,7 +108,6 @@ switch ($action) {
         break;
     case 'delete_quote':
         $controller = new QuoteController();
-        $controller->deleteAllQuoteItems();
         $controller->deleteQuote();
         break;
     case 'search_quotes':

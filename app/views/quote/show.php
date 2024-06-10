@@ -28,7 +28,7 @@
 <strong>Days for Deposit:</strong> <?php echo $quote['days_for_deposit']; ?></br>
 <strong>Deposit Date:</strong> <?php echo $quote['deposit_date']; ?></br>
 <strong>Month of Final Consultation:</strong> <?php echo $quote['final_consultation_month']; ?></br>
-<strong>Total Cost:</strong> £<?php echo number_format($quote['total_cost'], 2); ?></br>
+<strong>Total Cost:</strong><span id="total_cost"> £<?php echo number_format($quote['total_cost'], 2); ?></span></br>
 <p><strong>Custom Message:</strong> <?php echo $quote['custom_message']; ?></p>
 
 

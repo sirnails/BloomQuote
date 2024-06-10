@@ -125,12 +125,6 @@ class QuoteItem {
             $order++;
         }
     }
-    public function deleteAllQuoteItems($quote_id) {
-        $stmt = $this->db->prepare("DELETE FROM quote_items WHERE quote_id = ?");
-        $stmt->bind_param("i", $quote_id);
-        $stmt->execute();
-        return $stmt->get_result();
-    }
     public function createPayment($quote_item_id, $amount_paid, $outstanding_balance, $due_date, $consultation_date, $thank_you_message) {
         $stmt = $this->db->prepare("INSERT INTO payments (quote_item_id, amount_paid, outstanding_balance, due_date, consultation_date, thank_you_message) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("idddss", $quote_item_id, $amount_paid, $outstanding_balance, $due_date, $consultation_date, $thank_you_message);

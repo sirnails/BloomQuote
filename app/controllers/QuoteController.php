@@ -14,7 +14,6 @@ class QuoteController {
         $this->quoteModel = new Quote();
         $this->quoteItemModel = new QuoteItem();
     }
-
     private function checkCSRFToken($token) {
         if (!hash_equals($_SESSION['csrf_token'], $token)) {
             die('Invalid CSRF token');
@@ -31,7 +30,6 @@ class QuoteController {
         }
         return $quote; // return quote for further use
     }
-
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -184,13 +182,11 @@ class QuoteController {
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/show.php';
     }
-
     public function list_quotes() {
         $user_id = $_SESSION['user_id'];
         $quotes = $this->quoteModel->getQuotesByUserId($user_id);
         include_once './app/views/quote/list_quotes.php';
     }
-
     public function edit_quote() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -233,7 +229,6 @@ class QuoteController {
             include_once './app/views/quote/edit_quote.php';
         }
     }
-
     public function move_item_up() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
@@ -245,7 +240,6 @@ class QuoteController {
         $this->quoteItemModel->moveItemUp($item_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
-    
     public function move_item_down() {
         $item_id = InputHelper::sanitizeInt($_GET['item_id']);
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
@@ -257,7 +251,6 @@ class QuoteController {
         $this->quoteItemModel->moveItemDown($item_id);
         header("Location: index.php?action=show_quote&id=" . $quote_id);
     }
-    
     public function print($id) {
         $id = InputHelper::sanitizeInt($id);
         if ($id === false) {
@@ -271,29 +264,25 @@ class QuoteController {
         $items = $this->quoteItemModel->getItemsByQuoteId($id);
         include_once './app/views/quote/print.php';
     }
+    public function deleteQuote() {
+        $quote_id = InputHelper::sanitizeInt($_GET['id']);
+        if ($quote_id === false) {
+            error_log("Invalid quote ID");
+            die('Invalid quote ID');
+        }
+        $quote = $this->authorizeUser($quote_id); // Check authorization
     
-    public function deleteAllQuoteItems(){
-        $quote_id = InputHelper::sanitizeInt($_GET['id']);
-        if ($quote_id === false) {
-            die('Invalid quote ID');
-        }
-        $quote = $this->authorizeUser($quote_id); // Check authorization
+        //error_log("Deleting payments and items for quote_id: $quote_id");
+        // Delete payments associated with this quote
+        $this->quoteModel->deletePaymentsByQuoteId($quote_id);
         
-        $this->quoteItemModel->deleteAllQuoteItems($quote_id);
-    }
-
-    public function deleteQuote(){
-        $quote_id = InputHelper::sanitizeInt($_GET['id']);
-        if ($quote_id === false) {
-            die('Invalid quote ID');
-        }
-        $quote = $this->authorizeUser($quote_id); // Check authorization
-
-        $this->quoteItemModel->deleteAllQuoteItems($quote_id);
+        //error_log("Deleting quote for quote_id: $quote_id");
+        // Delete the quote itself
         $this->quoteModel->deleteQuote($quote_id);
+        //error_log("Deleted quote for quote_id: $quote_id");
+        
         header("Location: index.php?action=view_quotes");
     }
-
     public function search_quotes() {
         try {
             if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_term'])) {
@@ -384,9 +373,6 @@ class QuoteController {
             include_once './app/views/quote/record_payment.php';
         }
     }
-    
-    
-    
     public function view_receipt($payment_id) {
         $payment_id = InputHelper::sanitizeInt($payment_id);
         if ($payment_id === false) {
@@ -395,7 +381,6 @@ class QuoteController {
         $payment = $this->quoteItemModel->getPaymentById($payment_id);
         include_once './app/views/quote/view_receipt.php';
     }
-
     public function initial_payment_input() {
         $quote_id = InputHelper::sanitizeInt($_GET['quote_id']);
         if ($quote_id === false) {
@@ -404,8 +389,6 @@ class QuoteController {
         $quote = $this->authorizeUser($quote_id); // Check authorization
         include_once './app/views/quote/initial_payment_input.php';
     }
-    
-    
 }
 
 ?>

@@ -70,12 +70,6 @@ class QuoteItemTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testDeleteAllQuoteItems()
-    {
-        // Placeholder test
-        $this->markTestIncomplete();
-    }
-
     public function testCreatePayment()
     {
         // Placeholder test

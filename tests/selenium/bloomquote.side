@@ -1733,40 +1733,18 @@
       ],
       "value": ""
     }, {
-      "id": "f15c5b92-449a-408f-9d17-c78078949c75",
-      "comment": "",
-      "command": "chooseOkOnNextConfirmation",
-      "target": "",
-      "targets": [],
-      "value": ""
-    }, {
       "id": "824e0172-1db3-4dea-8228-1bc1a1c3435b",
       "comment": "",
       "command": "click",
-      "target": "linkText=🗑",
+      "target": "linkText=!🗑!",
       "targets": [
-        ["linkText=🗑", "linkText"],
+        ["linkText=!🗑!", "linkText"],
         ["css=tr:nth-child(1) .btn-danger", "css:finder"],
-        ["xpath=//a[contains(text(),'🗑')]", "xpath:link"],
-        ["xpath=//a[@onclick=\"return confirm('Are you sure you want to delete this item?');\"]", "xpath:attributes"],
-        ["xpath=//a[contains(@href, 'index.php?action=delete_item&item_id=193&quote_id=182')]", "xpath:href"],
+        ["xpath=//a[contains(text(),'!🗑!')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'index.php?action=delete_item&item_id=209&quote_id=186')]", "xpath:href"],
         ["xpath=//td[6]/div/a[4]", "xpath:position"],
-        ["xpath=//a[contains(.,'🗑')]", "xpath:innerText"]
+        ["xpath=//a[contains(.,'!🗑!')]", "xpath:innerText"]
       ],
-      "value": ""
-    }, {
-      "id": "c237bd05-2ffb-47f0-9f5b-1f4564b88349",
-      "comment": "",
-      "command": "assertConfirmation",
-      "target": "Are you sure you want to delete this item?",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "fc9c7600-e7cd-484b-9aa7-4c34f709e724",
-      "comment": "",
-      "command": "webdriverChooseOkOnVisibleConfirmation",
-      "target": "",
-      "targets": [],
       "value": ""
     }, {
       "id": "b96523bd-23a5-457d-85d5-3403f8d19149",

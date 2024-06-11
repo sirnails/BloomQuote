@@ -54,14 +54,25 @@ $action = isset($_GET['action']) ? InputHelper::sanitizeString($_GET['action']) 
 if (isset($_SESSION['user_id'])) { 
     $userController = new UserController();
     $user = $userController->getUserInfo($_SESSION['user_id']);
+    $settings = $userController->getUserSettings($_SESSION['user_id']);
+    if (!$settings) {
+        $settings = [
+            'dark_mode' => 1,
+            'delete_confirmation' => 1
+        ];
+    }
     $quoteModel = new Quote();
     $upcomingWeddings = $quoteModel->getNextWeddingGroup($_SESSION['user_id']);
-
 /**
  * Handles the various actions that can be performed on quotes, such as creating, editing, and deleting quotes and quote items.
  * The appropriate QuoteController method is called based on the $action parameter.
  */
+
 switch ($action) {
+    case 'settings':
+        $controller = new UserController();
+        $controller->settings();
+        break;
     case 'logout':
         $controller = new UserController();
         $controller->logout();

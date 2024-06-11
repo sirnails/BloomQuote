@@ -12,7 +12,6 @@ class UserController {
     public function __construct() {
         $this->userModel = new User();
     }
-
     private function checkCSRFToken($token) {
         if (!hash_equals($_SESSION['csrf_token'], $token)) {
             die('Invalid CSRF token');
@@ -56,8 +55,6 @@ class UserController {
             include_once './app/views/user/register.php';
         }
     }
-    
-
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkCSRFToken($_POST['csrf_token']);
@@ -77,14 +74,37 @@ class UserController {
             include_once './app/views/user/login.php';
         }
     }
-
     public function getUserInfo($user_id) {
         return $this->userModel->getUserById($user_id);
     }
-
     public function logout() {
         session_destroy();
         header("Location: index.php?action=login");
     }
+    public function getUserSettings($user_id) {
+        return $this->userModel->getUserSettings($user_id);
+    }
+    public function settings() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->checkCSRFToken($_POST['csrf_token']);
+            $user_id = $_SESSION['user_id'];
+            $dark_mode = isset($_POST['dark_mode']) ? 1 : 0;
+            $delete_confirmation = isset($_POST['delete_confirmation']) ? 1 : 0;
+    
+            $this->userModel->saveUserSettings($user_id, $dark_mode, $delete_confirmation);
+            header("Location: index.php?action=settings");
+        } else {
+            $user_id = $_SESSION['user_id'];
+            $settings = $this->userModel->getUserSettings($user_id);
+            if (!$settings) {
+                $settings = [
+                    'dark_mode' => 0,
+                    'delete_confirmation' => 1
+                ];
+            }
+            include_once './app/views/user/settings.php';
+        }
+    }
+    
 }
 ?>

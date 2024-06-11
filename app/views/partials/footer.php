@@ -33,8 +33,8 @@
         }
 </style>
 <div class="flex-container">
-<div id="footer">Website Last updated 2024-06-08 11:05<br>
-Sanitise changes</div>
+<div id="footer">Website Last updated 2024-06-11 19:55<br>
+Settings added</div>
 </div>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>

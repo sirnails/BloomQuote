@@ -1,5 +1,17 @@
 <?php
+use App\Models\Quote;
+use App\Models\QuoteItem;
+use App\Models\User;
+use App\Helpers\InputHelper;
 use App\Controllers\UserController;
+use App\Controllers\QuoteController;
+
+$user = null;
+if (isset($_SESSION['user_id'])) { 
+    $userController = new UserController();
+    $user = $userController->getUserInfo($_SESSION['user_id']);
+    $settings = $userController->getUserSettings($_SESSION['user_id']);
+}
 
 ?>
 <!DOCTYPE html>
@@ -18,14 +30,9 @@ use App\Controllers\UserController;
     </style>
 </head>
 
-<body>
-<?php
-$user = null;
-if (isset($_SESSION['user_id'])) {
-    $userController = new UserController();
-    $user = $userController->getUserInfo($_SESSION['user_id']);
-}
-?>
+<body class="<?php echo isset($settings['dark_mode']) && $settings['dark_mode'] ? 'dark-mode' : ''; ?>">
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">BloomQuote</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,14 +48,17 @@ if (isset($_SESSION['user_id'])) {
                     <a class="nav-link" href="index.php?action=view_quotes">View Existing Quotes</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=settings">Settings</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="index.php?action=logout">Logout <?php echo htmlspecialchars($user['username'] ?? ''); ?></a>
                 </li>
             <?php } ?>
         </ul>
     </div>
-    <div class="ml-auto">
+    <!-- <div class="ml-auto">
         <button class="btn btn-outline-secondary toggle-dark-mode">Toggle Dark Mode</button>
-    </div>
+    </div> -->
 </nav>
 <div class="container mt-4">
 <script>
@@ -56,19 +66,20 @@ if (isset($_SESSION['user_id'])) {
         const toggleDarkModeButton = document.querySelector('.toggle-dark-mode');
         
         // Check localStorage for dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {
+        //if (localStorage.getItem('darkMode') === 'enabled' || "<?php echo isset($settings['dark_mode']) && $settings['dark_mode']; ?>") {
+        if ("<?php echo isset($settings['dark_mode']) && $settings['dark_mode']; ?>") {
             document.body.classList.add('dark-mode');
         }
 
-        toggleDarkModeButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
+        // toggleDarkModeButton.addEventListener('click', () => {
+        //     document.body.classList.toggle('dark-mode');
 
-            // Save dark mode preference to localStorage
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
+        //     Save dark mode preference to localStorage
+        //     if (document.body.classList.contains('dark-mode')) {
+        //         localStorage.setItem('darkMode', 'enabled');
+        //     } else {
+        //         localStorage.setItem('darkMode', 'disabled');
+        //     }
+        // });
     });
 </script>

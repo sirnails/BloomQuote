@@ -32,29 +32,28 @@ if (isset($_SESSION['user_id'])) {
 
 <body class="<?php echo isset($settings['dark_mode']) && $settings['dark_mode'] ? 'dark-mode' : ''; ?>">
 
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">BloomQuote</a>
+    <?php if (isset($_SESSION['user_id'])) { ?>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <?php if (isset($_SESSION['user_id'])) { ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=create_quote">Create New Quote</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=view_quotes">View Existing Quotes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=settings">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=logout">Logout <?php echo htmlspecialchars($user['username'] ?? ''); ?></a>
-                </li>
-            <?php } ?>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?action=create_quote">Create New Quote</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?action=view_quotes">View Existing Quotes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?action=settings">Settings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?action=logout">Logout <?php echo htmlspecialchars($user['username'] ?? ''); ?></a>
+            </li>
         </ul>
+        <?php } ?>
     </div>
     <!-- <div class="ml-auto">
         <button class="btn btn-outline-secondary toggle-dark-mode">Toggle Dark Mode</button>

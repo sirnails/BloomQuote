@@ -33,8 +33,8 @@
         }
 </style>
 <div class="flex-container">
-<div id="footer">Website Last updated 2024-06-12 19:00<br>
-Captitalise Folders</div>
+<div id="footer">Website Last updated 2024-07-01 19:00<br>
+Hide menu before login</div>
 </div>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
